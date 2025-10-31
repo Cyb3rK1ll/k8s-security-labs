@@ -1,0 +1,13 @@
+=== POD ESCAPE ATTACK - viernes, 31 de octubre de 2025, 15:33:00 CET ===
+POD: attacker-1761921180
+=== INTENTO METADATA AZURE ===
+BLOQUEADO (metadata)
+=== INTENTO HOSTNETWORK ===
+# Kubernetes-managed hosts file.
+fe00::0	ip6-localnet
+fe00::0	ip6-mcastprefix
+fe00::1	ip6-allnodes
+fe00::2	ip6-allrouters
+10.0.1.8	attacker-1761921180
+ACCESO PERMITIDO
+

@@ -1,0 +1,1211 @@
+{
+  "Controls": [
+    {
+      "id": "4",
+      "version": "cis-1.11",
+      "detected_version": "1.32",
+      "text": "Worker Node Security Configuration",
+      "node_type": "node",
+      "tests": [
+        {
+          "section": "4.1",
+          "type": "",
+          "pass": 1,
+          "fail": 5,
+          "warn": 4,
+          "info": 0,
+          "desc": "Worker Node Configuration Files",
+          "results": [
+            {
+              "test_number": "4.1.1",
+              "test_desc": "Ensure that the kubelet service file permissions are set to 600 or more restrictive (Automated)",
+              "audit": "/bin/sh -c 'if test -e /etc/systemd/system/kubelet.service.d/10-kubeadm.conf; then stat -c permissions=%a /etc/systemd/system/kubelet.service.d/10-kubeadm.conf; fi' ",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "",
+              "remediation": "Run the below command (based on the file location on your system) on the each worker node.\nFor example, chmod 600 /etc/systemd/system/kubelet.service.d/10-kubeadm.conf\n",
+              "test_info": [
+                "Run the below command (based on the file location on your system) on the each worker node.\nFor example, chmod 600 /etc/systemd/system/kubelet.service.d/10-kubeadm.conf\n"
+              ],
+              "status": "FAIL",
+              "actual_value": "",
+              "scored": true,
+              "IsMultiple": false,
+              "expected_result": "'permissions' is present"
+            },
+            {
+              "test_number": "4.1.2",
+              "test_desc": "Ensure that the kubelet service file ownership is set to root:root (Automated)",
+              "audit": "/bin/sh -c \"if test -e /etc/systemd/system/kubelet.service.d/10-kubeadm.conf; then stat -c %U:%G /etc/systemd/system/kubelet.service.d/10-kubeadm.conf; else echo \\\"File not found\\\"; fi\"",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "",
+              "remediation": "Run the below command (based on the file location on your system) on the each worker node.\nFor example,\nchown root:root /etc/systemd/system/kubelet.service.d/10-kubeadm.conf\n",
+              "test_info": [
+                "Run the below command (based on the file location on your system) on the each worker node.\nFor example,\nchown root:root /etc/systemd/system/kubelet.service.d/10-kubeadm.conf\n"
+              ],
+              "status": "PASS",
+              "actual_value": "File not found",
+              "scored": true,
+              "IsMultiple": false,
+              "expected_result": "'root:root' is present OR 'File not found' is present"
+            },
+            {
+              "test_number": "4.1.3",
+              "test_desc": "If proxy kubeconfig file exists ensure permissions are set to 600 or more restrictive (Manual)",
+              "audit": "/bin/sh -c 'if test -e /etc/kubernetes/proxy.conf; then stat -c permissions=%a /etc/kubernetes/proxy.conf; fi' ",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "",
+              "remediation": "Run the below command (based on the file location on your system) on the each worker node.\nFor example,\nchmod 600 /etc/kubernetes/proxy.conf\n",
+              "test_info": [
+                "Run the below command (based on the file location on your system) on the each worker node.\nFor example,\nchmod 600 /etc/kubernetes/proxy.conf\n"
+              ],
+              "status": "WARN",
+              "actual_value": "",
+              "scored": false,
+              "IsMultiple": false,
+              "expected_result": "'permissions' is present"
+            },
+            {
+              "test_number": "4.1.4",
+              "test_desc": "If proxy kubeconfig file exists ensure ownership is set to root:root (Manual)",
+              "audit": "/bin/sh -c 'if test -e /etc/kubernetes/proxy.conf; then stat -c %U:%G /etc/kubernetes/proxy.conf; fi' ",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "",
+              "remediation": "Run the below command (based on the file location on your system) on the each worker node.\nFor example, chown root:root /etc/kubernetes/proxy.conf\n",
+              "test_info": [
+                "Run the below command (based on the file location on your system) on the each worker node.\nFor example, chown root:root /etc/kubernetes/proxy.conf\n"
+              ],
+              "status": "WARN",
+              "actual_value": "",
+              "scored": false,
+              "IsMultiple": false,
+              "expected_result": "'root:root' is present"
+            },
+            {
+              "test_number": "4.1.5",
+              "test_desc": "Ensure that the --kubeconfig kubelet.conf file permissions are set to 600 or more restrictive (Automated)",
+              "audit": "/bin/sh -c 'if test -e /etc/kubernetes/kubelet.conf; then stat -c permissions=%a /etc/kubernetes/kubelet.conf; fi' ",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "",
+              "remediation": "Run the below command (based on the file location on your system) on the each worker node.\nFor example,\nchmod 600 /etc/kubernetes/kubelet.conf\n",
+              "test_info": [
+                "Run the below command (based on the file location on your system) on the each worker node.\nFor example,\nchmod 600 /etc/kubernetes/kubelet.conf\n"
+              ],
+              "status": "FAIL",
+              "actual_value": "",
+              "scored": true,
+              "IsMultiple": false,
+              "expected_result": "'permissions' is present"
+            },
+            {
+              "test_number": "4.1.6",
+              "test_desc": "Ensure that the --kubeconfig kubelet.conf file ownership is set to root:root (Automated)",
+              "audit": "/bin/sh -c 'if test -e /etc/kubernetes/kubelet.conf; then stat -c %U:%G /etc/kubernetes/kubelet.conf; fi' ",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "",
+              "remediation": "Run the below command (based on the file location on your system) on the each worker node.\nFor example,\nchown root:root /etc/kubernetes/kubelet.conf\n",
+              "test_info": [
+                "Run the below command (based on the file location on your system) on the each worker node.\nFor example,\nchown root:root /etc/kubernetes/kubelet.conf\n"
+              ],
+              "status": "FAIL",
+              "actual_value": "",
+              "scored": true,
+              "IsMultiple": false,
+              "expected_result": "'root:root' is present"
+            },
+            {
+              "test_number": "4.1.7",
+              "test_desc": "Ensure that the certificate authorities file permissions are set to 644 or more restrictive (Manual)",
+              "audit": "CAFILE=$(ps -ef | grep kubelet | grep -v apiserver | grep -- --client-ca-file= | awk -F '--client-ca-file=' '{print $2}' | awk '{print $1}' | uniq)\nif test -z $CAFILE; then CAFILE=/etc/kubernetes/pki/ca.crt; fi\nif test -e $CAFILE; then stat -c permissions=%a $CAFILE; fi\n",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "",
+              "remediation": "Run the following command to modify the file permissions of the\n--client-ca-file chmod 644 <filename>\n",
+              "test_info": [
+                "Run the following command to modify the file permissions of the\n--client-ca-file chmod 644 <filename>\n"
+              ],
+              "status": "WARN",
+              "actual_value": "",
+              "scored": false,
+              "IsMultiple": false,
+              "expected_result": "'permissions' is present"
+            },
+            {
+              "test_number": "4.1.8",
+              "test_desc": "Ensure that the client certificate authorities file ownership is set to root:root (Manual)",
+              "audit": "CAFILE=$(ps -ef | grep kubelet | grep -v apiserver | grep -- --client-ca-file= | awk -F '--client-ca-file=' '{print $2}' | awk '{print $1}' | uniq)\nif test -z $CAFILE; then CAFILE=/etc/kubernetes/pki/ca.crt; fi\nif test -e $CAFILE; then stat -c %U:%G $CAFILE; fi\n",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "",
+              "remediation": "Run the following command to modify the ownership of the --client-ca-file.\nchown root:root <filename>\n",
+              "test_info": [
+                "Run the following command to modify the ownership of the --client-ca-file.\nchown root:root <filename>\n"
+              ],
+              "status": "WARN",
+              "actual_value": "",
+              "scored": false,
+              "IsMultiple": false,
+              "expected_result": "'root:root' is present"
+            },
+            {
+              "test_number": "4.1.9",
+              "test_desc": "If the kubelet config.yaml configuration file is being used validate permissions set to 600 or more restrictive (Automated)",
+              "audit": "/bin/sh -c 'if test -e /var/lib/kubelet/config.yaml; then stat -c permissions=%a /var/lib/kubelet/config.yaml; fi' ",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "",
+              "remediation": "Run the following command (using the config file location identified in the Audit step)\nchmod 600 /var/lib/kubelet/config.yaml\n",
+              "test_info": [
+                "Run the following command (using the config file location identified in the Audit step)\nchmod 600 /var/lib/kubelet/config.yaml\n"
+              ],
+              "status": "FAIL",
+              "actual_value": "",
+              "scored": true,
+              "IsMultiple": false,
+              "expected_result": "'permissions' is present"
+            },
+            {
+              "test_number": "4.1.10",
+              "test_desc": "If the kubelet config.yaml configuration file is being used validate file ownership is set to root:root (Automated)",
+              "audit": "/bin/sh -c 'if test -e /var/lib/kubelet/config.yaml; then stat -c %U:%G /var/lib/kubelet/config.yaml; fi' ",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "",
+              "remediation": "Run the following command (using the config file location identified in the Audit step)\nchown root:root /var/lib/kubelet/config.yaml\n",
+              "test_info": [
+                "Run the following command (using the config file location identified in the Audit step)\nchown root:root /var/lib/kubelet/config.yaml\n"
+              ],
+              "status": "FAIL",
+              "actual_value": "",
+              "scored": true,
+              "IsMultiple": false,
+              "expected_result": "'root:root' is present"
+            }
+          ]
+        },
+        {
+          "section": "4.2",
+          "type": "",
+          "pass": 0,
+          "fail": 5,
+          "warn": 10,
+          "info": 0,
+          "desc": "Kubelet",
+          "results": [
+            {
+              "test_number": "4.2.1",
+              "test_desc": "Ensure that the --anonymous-auth argument is set to false (Automated)",
+              "audit": "/bin/ps -fC $kubeletbin",
+              "AuditEnv": "",
+              "AuditConfig": "/bin/cat /var/lib/kubelet/config.yaml",
+              "type": "",
+              "remediation": "If using a Kubelet config file, edit the file to set `authentication: anonymous: enabled` to\n`false`.\nIf using executable arguments, edit the kubelet service file\n/etc/systemd/system/kubelet.service.d/10-kubeadm.conf on each worker node and\nset the below parameter in KUBELET_SYSTEM_PODS_ARGS variable.\n`--anonymous-auth=false`\nBased on your system, restart the kubelet service. For example,\nsystemctl daemon-reload\nsystemctl restart kubelet.service\n",
+              "test_info": [
+                "If using a Kubelet config file, edit the file to set `authentication: anonymous: enabled` to\n`false`.\nIf using executable arguments, edit the kubelet service file\n/etc/systemd/system/kubelet.service.d/10-kubeadm.conf on each worker node and\nset the below parameter in KUBELET_SYSTEM_PODS_ARGS variable.\n`--anonymous-auth=false`\nBased on your system, restart the kubelet service. For example,\nsystemctl daemon-reload\nsystemctl restart kubelet.service\n"
+              ],
+              "status": "FAIL",
+              "actual_value": "",
+              "scored": true,
+              "IsMultiple": false,
+              "expected_result": "",
+              "reason": "failed to run: \"/bin/ps -fC $kubeletbin\", output: \"error: list of command names must follow -C\\n\\nUsage:\\n ps [options]\\n\\n Try 'ps --help <simple|list|output|threads|misc|all>'\\n  or 'ps --help <s|l|o|t|m|a>'\\n for additional help text.\\n\\nFor more details see ps(1).\\n\", error: exit status 1"
+            },
+            {
+              "test_number": "4.2.2",
+              "test_desc": "Ensure that the --authorization-mode argument is not set to AlwaysAllow (Automated)",
+              "audit": "/bin/ps -fC $kubeletbin",
+              "AuditEnv": "",
+              "AuditConfig": "/bin/cat /var/lib/kubelet/config.yaml",
+              "type": "",
+              "remediation": "If using a Kubelet config file, edit the file to set `authorization.mode` to Webhook. If\nusing executable arguments, edit the kubelet service file\n/etc/systemd/system/kubelet.service.d/10-kubeadm.conf on each worker node and\nset the below parameter in KUBELET_AUTHZ_ARGS variable.\n--authorization-mode=Webhook\nBased on your system, restart the kubelet service. For example,\nsystemctl daemon-reload\nsystemctl restart kubelet.service\n",
+              "test_info": [
+                "If using a Kubelet config file, edit the file to set `authorization.mode` to Webhook. If\nusing executable arguments, edit the kubelet service file\n/etc/systemd/system/kubelet.service.d/10-kubeadm.conf on each worker node and\nset the below parameter in KUBELET_AUTHZ_ARGS variable.\n--authorization-mode=Webhook\nBased on your system, restart the kubelet service. For example,\nsystemctl daemon-reload\nsystemctl restart kubelet.service\n"
+              ],
+              "status": "FAIL",
+              "actual_value": "",
+              "scored": true,
+              "IsMultiple": false,
+              "expected_result": "",
+              "reason": "failed to run: \"/bin/ps -fC $kubeletbin\", output: \"error: list of command names must follow -C\\n\\nUsage:\\n ps [options]\\n\\n Try 'ps --help <simple|list|output|threads|misc|all>'\\n  or 'ps --help <s|l|o|t|m|a>'\\n for additional help text.\\n\\nFor more details see ps(1).\\n\", error: exit status 1"
+            },
+            {
+              "test_number": "4.2.3",
+              "test_desc": "Ensure that the --client-ca-file argument is set as appropriate (Automated)",
+              "audit": "/bin/ps -fC $kubeletbin",
+              "AuditEnv": "",
+              "AuditConfig": "/bin/cat /var/lib/kubelet/config.yaml",
+              "type": "",
+              "remediation": "If using a Kubelet config file, edit the file to set `authentication.x509.clientCAFile` to\nthe location of the client CA file.\nIf using command line arguments, edit the kubelet service file\n/etc/systemd/system/kubelet.service.d/10-kubeadm.conf on each worker node and\nset the below parameter in KUBELET_AUTHZ_ARGS variable.\n--client-ca-file=<path/to/client-ca-file>\nBased on your system, restart the kubelet service. For example,\nsystemctl daemon-reload\nsystemctl restart kubelet.service\n",
+              "test_info": [
+                "If using a Kubelet config file, edit the file to set `authentication.x509.clientCAFile` to\nthe location of the client CA file.\nIf using command line arguments, edit the kubelet service file\n/etc/systemd/system/kubelet.service.d/10-kubeadm.conf on each worker node and\nset the below parameter in KUBELET_AUTHZ_ARGS variable.\n--client-ca-file=<path/to/client-ca-file>\nBased on your system, restart the kubelet service. For example,\nsystemctl daemon-reload\nsystemctl restart kubelet.service\n"
+              ],
+              "status": "FAIL",
+              "actual_value": "",
+              "scored": true,
+              "IsMultiple": false,
+              "expected_result": "",
+              "reason": "failed to run: \"/bin/ps -fC $kubeletbin\", output: \"error: list of command names must follow -C\\n\\nUsage:\\n ps [options]\\n\\n Try 'ps --help <simple|list|output|threads|misc|all>'\\n  or 'ps --help <s|l|o|t|m|a>'\\n for additional help text.\\n\\nFor more details see ps(1).\\n\", error: exit status 1"
+            },
+            {
+              "test_number": "4.2.4",
+              "test_desc": "Verify that if defined, the --read-only-port argument is set to 0 (Manual)",
+              "audit": "/bin/ps -fC $kubeletbin",
+              "AuditEnv": "",
+              "AuditConfig": "/bin/cat /var/lib/kubelet/config.yaml",
+              "type": "",
+              "remediation": "If using a Kubelet config file, edit the file to set `readOnlyPort` to 0.\nIf using command line arguments, edit the kubelet service file\n/etc/systemd/system/kubelet.service.d/10-kubeadm.conf on each worker node and\nset the below parameter in KUBELET_SYSTEM_PODS_ARGS variable.\n--read-only-port=0\nBased on your system, restart the kubelet service. For example,\nsystemctl daemon-reload\nsystemctl restart kubelet.service\n",
+              "test_info": [
+                "If using a Kubelet config file, edit the file to set `readOnlyPort` to 0.\nIf using command line arguments, edit the kubelet service file\n/etc/systemd/system/kubelet.service.d/10-kubeadm.conf on each worker node and\nset the below parameter in KUBELET_SYSTEM_PODS_ARGS variable.\n--read-only-port=0\nBased on your system, restart the kubelet service. For example,\nsystemctl daemon-reload\nsystemctl restart kubelet.service\n"
+              ],
+              "status": "WARN",
+              "actual_value": "",
+              "scored": false,
+              "IsMultiple": false,
+              "expected_result": "",
+              "reason": "failed to run: \"/bin/ps -fC $kubeletbin\", output: \"error: list of command names must follow -C\\n\\nUsage:\\n ps [options]\\n\\n Try 'ps --help <simple|list|output|threads|misc|all>'\\n  or 'ps --help <s|l|o|t|m|a>'\\n for additional help text.\\n\\nFor more details see ps(1).\\n\", error: exit status 1"
+            },
+            {
+              "test_number": "4.2.5",
+              "test_desc": "Ensure that the --streaming-connection-idle-timeout argument is not set to 0 (Manual)",
+              "audit": "/bin/ps -fC $kubeletbin",
+              "AuditEnv": "",
+              "AuditConfig": "/bin/cat /var/lib/kubelet/config.yaml",
+              "type": "",
+              "remediation": "If using a Kubelet config file, edit the file to set `streamingConnectionIdleTimeout` to a\nvalue other than 0.\nIf using command line arguments, edit the kubelet service file\n/etc/systemd/system/kubelet.service.d/10-kubeadm.conf on each worker node and\nset the below parameter in KUBELET_SYSTEM_PODS_ARGS variable.\n--streaming-connection-idle-timeout=5m\nBased on your system, restart the kubelet service. For example,\nsystemctl daemon-reload\nsystemctl restart kubelet.service\n",
+              "test_info": [
+                "If using a Kubelet config file, edit the file to set `streamingConnectionIdleTimeout` to a\nvalue other than 0.\nIf using command line arguments, edit the kubelet service file\n/etc/systemd/system/kubelet.service.d/10-kubeadm.conf on each worker node and\nset the below parameter in KUBELET_SYSTEM_PODS_ARGS variable.\n--streaming-connection-idle-timeout=5m\nBased on your system, restart the kubelet service. For example,\nsystemctl daemon-reload\nsystemctl restart kubelet.service\n"
+              ],
+              "status": "WARN",
+              "actual_value": "",
+              "scored": false,
+              "IsMultiple": false,
+              "expected_result": "",
+              "reason": "failed to run: \"/bin/ps -fC $kubeletbin\", output: \"error: list of command names must follow -C\\n\\nUsage:\\n ps [options]\\n\\n Try 'ps --help <simple|list|output|threads|misc|all>'\\n  or 'ps --help <s|l|o|t|m|a>'\\n for additional help text.\\n\\nFor more details see ps(1).\\n\", error: exit status 1"
+            },
+            {
+              "test_number": "4.2.6",
+              "test_desc": "Ensure that the --make-iptables-util-chains argument is set to true (Automated)",
+              "audit": "/bin/ps -fC $kubeletbin",
+              "AuditEnv": "",
+              "AuditConfig": "/bin/cat /var/lib/kubelet/config.yaml",
+              "type": "",
+              "remediation": "If using a Kubelet config file, edit the file to set `makeIPTablesUtilChains` to `true`.\nIf using command line arguments, edit the kubelet service file\n/etc/systemd/system/kubelet.service.d/10-kubeadm.conf on each worker node and\nremove the --make-iptables-util-chains argument from the\nKUBELET_SYSTEM_PODS_ARGS variable.\nBased on your system, restart the kubelet service. For example:\nsystemctl daemon-reload\nsystemctl restart kubelet.service\n",
+              "test_info": [
+                "If using a Kubelet config file, edit the file to set `makeIPTablesUtilChains` to `true`.\nIf using command line arguments, edit the kubelet service file\n/etc/systemd/system/kubelet.service.d/10-kubeadm.conf on each worker node and\nremove the --make-iptables-util-chains argument from the\nKUBELET_SYSTEM_PODS_ARGS variable.\nBased on your system, restart the kubelet service. For example:\nsystemctl daemon-reload\nsystemctl restart kubelet.service\n"
+              ],
+              "status": "FAIL",
+              "actual_value": "",
+              "scored": true,
+              "IsMultiple": false,
+              "expected_result": "",
+              "reason": "failed to run: \"/bin/ps -fC $kubeletbin\", output: \"error: list of command names must follow -C\\n\\nUsage:\\n ps [options]\\n\\n Try 'ps --help <simple|list|output|threads|misc|all>'\\n  or 'ps --help <s|l|o|t|m|a>'\\n for additional help text.\\n\\nFor more details see ps(1).\\n\", error: exit status 1"
+            },
+            {
+              "test_number": "4.2.7",
+              "test_desc": "Ensure that the --hostname-override argument is not set (Manual)",
+              "audit": "/bin/ps -fC $kubeletbin",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "",
+              "remediation": "Edit the kubelet service file /etc/systemd/system/kubelet.service.d/10-kubeadm.conf\non each worker node and remove the --hostname-override argument from the\nKUBELET_SYSTEM_PODS_ARGS variable.\nBased on your system, restart the kubelet service. For example,\nsystemctl daemon-reload\nsystemctl restart kubelet.service\n",
+              "test_info": [
+                "Edit the kubelet service file /etc/systemd/system/kubelet.service.d/10-kubeadm.conf\non each worker node and remove the --hostname-override argument from the\nKUBELET_SYSTEM_PODS_ARGS variable.\nBased on your system, restart the kubelet service. For example,\nsystemctl daemon-reload\nsystemctl restart kubelet.service\n"
+              ],
+              "status": "WARN",
+              "actual_value": "",
+              "scored": false,
+              "IsMultiple": false,
+              "expected_result": "",
+              "reason": "failed to run: \"/bin/ps -fC $kubeletbin\", output: \"error: list of command names must follow -C\\n\\nUsage:\\n ps [options]\\n\\n Try 'ps --help <simple|list|output|threads|misc|all>'\\n  or 'ps --help <s|l|o|t|m|a>'\\n for additional help text.\\n\\nFor more details see ps(1).\\n\", error: exit status 1"
+            },
+            {
+              "test_number": "4.2.8",
+              "test_desc": "Ensure that the eventRecordQPS argument is set to a level which ensures appropriate event capture (Manual)",
+              "audit": "/bin/ps -fC $kubeletbin",
+              "AuditEnv": "",
+              "AuditConfig": "/bin/cat /var/lib/kubelet/config.yaml",
+              "type": "",
+              "remediation": "If using a Kubelet config file, edit the file to set `eventRecordQPS` to an appropriate level.\nIf using command line arguments, edit the kubelet service file\n/etc/systemd/system/kubelet.service.d/10-kubeadm.conf on each worker node and\nset the below parameter in KUBELET_SYSTEM_PODS_ARGS variable.\nBased on your system, restart the kubelet service. For example,\nsystemctl daemon-reload\nsystemctl restart kubelet.service\n",
+              "test_info": [
+                "If using a Kubelet config file, edit the file to set `eventRecordQPS` to an appropriate level.\nIf using command line arguments, edit the kubelet service file\n/etc/systemd/system/kubelet.service.d/10-kubeadm.conf on each worker node and\nset the below parameter in KUBELET_SYSTEM_PODS_ARGS variable.\nBased on your system, restart the kubelet service. For example,\nsystemctl daemon-reload\nsystemctl restart kubelet.service\n"
+              ],
+              "status": "WARN",
+              "actual_value": "",
+              "scored": false,
+              "IsMultiple": false,
+              "expected_result": "",
+              "reason": "failed to run: \"/bin/ps -fC $kubeletbin\", output: \"error: list of command names must follow -C\\n\\nUsage:\\n ps [options]\\n\\n Try 'ps --help <simple|list|output|threads|misc|all>'\\n  or 'ps --help <s|l|o|t|m|a>'\\n for additional help text.\\n\\nFor more details see ps(1).\\n\", error: exit status 1"
+            },
+            {
+              "test_number": "4.2.9",
+              "test_desc": "Ensure that the --tls-cert-file and --tls-private-key-file arguments are set as appropriate (Manual)",
+              "audit": "/bin/ps -fC $kubeletbin",
+              "AuditEnv": "",
+              "AuditConfig": "/bin/cat /var/lib/kubelet/config.yaml",
+              "type": "",
+              "remediation": "If using a Kubelet config file, edit the file to set `tlsCertFile` to the location\nof the certificate file to use to identify this Kubelet, and `tlsPrivateKeyFile`\nto the location of the corresponding private key file.\nIf using command line arguments, edit the kubelet service file\n/etc/systemd/system/kubelet.service.d/10-kubeadm.conf on each worker node and\nset the below parameters in KUBELET_CERTIFICATE_ARGS variable.\n--tls-cert-file=<path/to/tls-certificate-file>\n--tls-private-key-file=<path/to/tls-key-file>\nBased on your system, restart the kubelet service. For example,\nsystemctl daemon-reload\nsystemctl restart kubelet.service\n",
+              "test_info": [
+                "If using a Kubelet config file, edit the file to set `tlsCertFile` to the location\nof the certificate file to use to identify this Kubelet, and `tlsPrivateKeyFile`\nto the location of the corresponding private key file.\nIf using command line arguments, edit the kubelet service file\n/etc/systemd/system/kubelet.service.d/10-kubeadm.conf on each worker node and\nset the below parameters in KUBELET_CERTIFICATE_ARGS variable.\n--tls-cert-file=<path/to/tls-certificate-file>\n--tls-private-key-file=<path/to/tls-key-file>\nBased on your system, restart the kubelet service. For example,\nsystemctl daemon-reload\nsystemctl restart kubelet.service\n"
+              ],
+              "status": "WARN",
+              "actual_value": "",
+              "scored": false,
+              "IsMultiple": false,
+              "expected_result": "",
+              "reason": "failed to run: \"/bin/ps -fC $kubeletbin\", output: \"error: list of command names must follow -C\\n\\nUsage:\\n ps [options]\\n\\n Try 'ps --help <simple|list|output|threads|misc|all>'\\n  or 'ps --help <s|l|o|t|m|a>'\\n for additional help text.\\n\\nFor more details see ps(1).\\n\", error: exit status 1"
+            },
+            {
+              "test_number": "4.2.10",
+              "test_desc": "Ensure that the --rotate-certificates argument is not set to false (Automated)",
+              "audit": "/bin/ps -fC $kubeletbin",
+              "AuditEnv": "",
+              "AuditConfig": "/bin/cat /var/lib/kubelet/config.yaml",
+              "type": "",
+              "remediation": "If using a Kubelet config file, edit the file to add the line `rotateCertificates` to `true` or\nremove it altogether to use the default value.\nIf using command line arguments, edit the kubelet service file\n/etc/systemd/system/kubelet.service.d/10-kubeadm.conf on each worker node and\nremove --rotate-certificates=false argument from the KUBELET_CERTIFICATE_ARGS\nvariable.\nBased on your system, restart the kubelet service. For example,\nsystemctl daemon-reload\nsystemctl restart kubelet.service\n",
+              "test_info": [
+                "If using a Kubelet config file, edit the file to add the line `rotateCertificates` to `true` or\nremove it altogether to use the default value.\nIf using command line arguments, edit the kubelet service file\n/etc/systemd/system/kubelet.service.d/10-kubeadm.conf on each worker node and\nremove --rotate-certificates=false argument from the KUBELET_CERTIFICATE_ARGS\nvariable.\nBased on your system, restart the kubelet service. For example,\nsystemctl daemon-reload\nsystemctl restart kubelet.service\n"
+              ],
+              "status": "FAIL",
+              "actual_value": "",
+              "scored": true,
+              "IsMultiple": false,
+              "expected_result": "",
+              "reason": "failed to run: \"/bin/ps -fC $kubeletbin\", output: \"error: list of command names must follow -C\\n\\nUsage:\\n ps [options]\\n\\n Try 'ps --help <simple|list|output|threads|misc|all>'\\n  or 'ps --help <s|l|o|t|m|a>'\\n for additional help text.\\n\\nFor more details see ps(1).\\n\", error: exit status 1"
+            },
+            {
+              "test_number": "4.2.11",
+              "test_desc": "Verify that the RotateKubeletServerCertificate argument is set to true (Manual)",
+              "audit": "/bin/ps -fC $kubeletbin",
+              "AuditEnv": "",
+              "AuditConfig": "/bin/cat /var/lib/kubelet/config.yaml",
+              "type": "",
+              "remediation": "Edit the kubelet service file /etc/systemd/system/kubelet.service.d/10-kubeadm.conf\non each worker node and set the below parameter in KUBELET_CERTIFICATE_ARGS variable.\n--feature-gates=RotateKubeletServerCertificate=true\nBased on your system, restart the kubelet service. For example:\nsystemctl daemon-reload\nsystemctl restart kubelet.service\n",
+              "test_info": [
+                "Edit the kubelet service file /etc/systemd/system/kubelet.service.d/10-kubeadm.conf\non each worker node and set the below parameter in KUBELET_CERTIFICATE_ARGS variable.\n--feature-gates=RotateKubeletServerCertificate=true\nBased on your system, restart the kubelet service. For example:\nsystemctl daemon-reload\nsystemctl restart kubelet.service\n"
+              ],
+              "status": "WARN",
+              "actual_value": "",
+              "scored": false,
+              "IsMultiple": false,
+              "expected_result": "",
+              "reason": "failed to run: \"/bin/ps -fC $kubeletbin\", output: \"error: list of command names must follow -C\\n\\nUsage:\\n ps [options]\\n\\n Try 'ps --help <simple|list|output|threads|misc|all>'\\n  or 'ps --help <s|l|o|t|m|a>'\\n for additional help text.\\n\\nFor more details see ps(1).\\n\", error: exit status 1"
+            },
+            {
+              "test_number": "4.2.12",
+              "test_desc": "Ensure that the Kubelet only makes use of Strong Cryptographic Ciphers (Manual)",
+              "audit": "/bin/ps -fC $kubeletbin",
+              "AuditEnv": "",
+              "AuditConfig": "/bin/cat /var/lib/kubelet/config.yaml",
+              "type": "",
+              "remediation": "If using a Kubelet config file, edit the file to set `tlsCipherSuites` to\nTLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_128_GCM_SHA256\nor to a subset of these values.\nIf using executable arguments, edit the kubelet service file\n/etc/systemd/system/kubelet.service.d/10-kubeadm.conf on each worker node and\nset the --tls-cipher-suites parameter as follows, or to a subset of these values.\n--tls-cipher-suites=TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_128_GCM_SHA256\nBased on your system, restart the kubelet service. For example:\nsystemctl daemon-reload\nsystemctl restart kubelet.service\n",
+              "test_info": [
+                "If using a Kubelet config file, edit the file to set `tlsCipherSuites` to\nTLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_128_GCM_SHA256\nor to a subset of these values.\nIf using executable arguments, edit the kubelet service file\n/etc/systemd/system/kubelet.service.d/10-kubeadm.conf on each worker node and\nset the --tls-cipher-suites parameter as follows, or to a subset of these values.\n--tls-cipher-suites=TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_128_GCM_SHA256\nBased on your system, restart the kubelet service. For example:\nsystemctl daemon-reload\nsystemctl restart kubelet.service\n"
+              ],
+              "status": "WARN",
+              "actual_value": "",
+              "scored": false,
+              "IsMultiple": false,
+              "expected_result": "",
+              "reason": "failed to run: \"/bin/ps -fC $kubeletbin\", output: \"error: list of command names must follow -C\\n\\nUsage:\\n ps [options]\\n\\n Try 'ps --help <simple|list|output|threads|misc|all>'\\n  or 'ps --help <s|l|o|t|m|a>'\\n for additional help text.\\n\\nFor more details see ps(1).\\n\", error: exit status 1"
+            },
+            {
+              "test_number": "4.2.13",
+              "test_desc": "Ensure that a limit is set on pod PIDs (Manual)",
+              "audit": "/bin/ps -fC $kubeletbin",
+              "AuditEnv": "",
+              "AuditConfig": "/bin/cat /var/lib/kubelet/config.yaml",
+              "type": "",
+              "remediation": "Decide on an appropriate level for this parameter and set it,\neither via the --pod-max-pids command line parameter or the PodPidsLimit configuration file setting.\n",
+              "test_info": [
+                "Decide on an appropriate level for this parameter and set it,\neither via the --pod-max-pids command line parameter or the PodPidsLimit configuration file setting.\n"
+              ],
+              "status": "WARN",
+              "actual_value": "",
+              "scored": false,
+              "IsMultiple": false,
+              "expected_result": "",
+              "reason": "failed to run: \"/bin/ps -fC $kubeletbin\", output: \"error: list of command names must follow -C\\n\\nUsage:\\n ps [options]\\n\\n Try 'ps --help <simple|list|output|threads|misc|all>'\\n  or 'ps --help <s|l|o|t|m|a>'\\n for additional help text.\\n\\nFor more details see ps(1).\\n\", error: exit status 1"
+            },
+            {
+              "test_number": "4.2.14",
+              "test_desc": "Ensure that the --seccomp-default parameter is set to true (Manual)",
+              "audit": "/bin/ps -fC $kubeletbin",
+              "AuditEnv": "",
+              "AuditConfig": "/bin/cat /var/lib/kubelet/config.yaml",
+              "type": "",
+              "remediation": "Set the parameter, either via the --seccomp-default command line parameter or the\nseccompDefault configuration file setting.\nBy default the seccomp profile is not enabled.\n",
+              "test_info": [
+                "Set the parameter, either via the --seccomp-default command line parameter or the\nseccompDefault configuration file setting.\nBy default the seccomp profile is not enabled.\n"
+              ],
+              "status": "WARN",
+              "actual_value": "",
+              "scored": false,
+              "IsMultiple": false,
+              "expected_result": "",
+              "reason": "failed to run: \"/bin/ps -fC $kubeletbin\", output: \"error: list of command names must follow -C\\n\\nUsage:\\n ps [options]\\n\\n Try 'ps --help <simple|list|output|threads|misc|all>'\\n  or 'ps --help <s|l|o|t|m|a>'\\n for additional help text.\\n\\nFor more details see ps(1).\\n\", error: exit status 1"
+            },
+            {
+              "test_number": "4.2.15",
+              "test_desc": "Ensure that the --IPAddressDeny is set to any (Manual)",
+              "audit": "/bin/ps -fC $kubeletbin",
+              "AuditEnv": "",
+              "AuditConfig": "/bin/cat /var/lib/kubelet/config.yaml",
+              "type": "",
+              "remediation": "Configuring the setting IPAddressDeny=any will deny service to any IP address not specified in the complimentary setting IPAddressAllow configuration parameter (\nIPAddressDeny=any\nIPAddressAllow={{ kubelet_secure_addresses }}\n*Note\n  kubelet_secure_addresses: \"localhost link-local {{ kube_pods_subnets |regex_replace(',', ' ') }} {{ kube_node_addresses }} {{ loadbalancer_apiserver.address | default('')\"\nBy default IPAddressDeny is not enabled.\n",
+              "test_info": [
+                "Configuring the setting IPAddressDeny=any will deny service to any IP address not specified in the complimentary setting IPAddressAllow configuration parameter (\nIPAddressDeny=any\nIPAddressAllow={{ kubelet_secure_addresses }}\n*Note\n  kubelet_secure_addresses: \"localhost link-local {{ kube_pods_subnets |regex_replace(',', ' ') }} {{ kube_node_addresses }} {{ loadbalancer_apiserver.address | default('')\"\nBy default IPAddressDeny is not enabled.\n"
+              ],
+              "status": "WARN",
+              "actual_value": "",
+              "scored": false,
+              "IsMultiple": false,
+              "expected_result": "",
+              "reason": "failed to run: \"/bin/ps -fC $kubeletbin\", output: \"error: list of command names must follow -C\\n\\nUsage:\\n ps [options]\\n\\n Try 'ps --help <simple|list|output|threads|misc|all>'\\n  or 'ps --help <s|l|o|t|m|a>'\\n for additional help text.\\n\\nFor more details see ps(1).\\n\", error: exit status 1"
+            }
+          ]
+        },
+        {
+          "section": "4.3",
+          "type": "",
+          "pass": 0,
+          "fail": 1,
+          "warn": 0,
+          "info": 0,
+          "desc": "kube-proxy",
+          "results": [
+            {
+              "test_number": "4.3.1",
+              "test_desc": "Ensure that the kube-proxy metrics service is bound to localhost (Automated)",
+              "audit": "/bin/ps -fC $proxybin",
+              "AuditEnv": "",
+              "AuditConfig": "/bin/sh -c 'if test -e /etc/kubernetes/proxy.conf; then cat /etc/kubernetes/proxy.conf; fi'",
+              "type": "",
+              "remediation": "Modify or remove any values which bind the metrics service to a non-localhost address.\nThe default value is 127.0.0.1:10249.\n",
+              "test_info": [
+                "Modify or remove any values which bind the metrics service to a non-localhost address.\nThe default value is 127.0.0.1:10249.\n"
+              ],
+              "status": "FAIL",
+              "actual_value": "",
+              "scored": true,
+              "IsMultiple": false,
+              "expected_result": "",
+              "reason": "failed to run: \"/bin/ps -fC $proxybin\", output: \"error: list of command names must follow -C\\n\\nUsage:\\n ps [options]\\n\\n Try 'ps --help <simple|list|output|threads|misc|all>'\\n  or 'ps --help <s|l|o|t|m|a>'\\n for additional help text.\\n\\nFor more details see ps(1).\\n\", error: exit status 1"
+            }
+          ]
+        }
+      ],
+      "total_pass": 1,
+      "total_fail": 11,
+      "total_warn": 14,
+      "total_info": 0
+    },
+    {
+      "id": "5",
+      "version": "cis-1.11",
+      "detected_version": "1.32",
+      "text": "Kubernetes Policies",
+      "node_type": "policies",
+      "tests": [
+        {
+          "section": "5.1",
+          "type": "",
+          "pass": 0,
+          "fail": 0,
+          "warn": 13,
+          "info": 0,
+          "desc": "RBAC and Service Accounts",
+          "results": [
+            {
+              "test_number": "5.1.1",
+              "test_desc": "Ensure that the cluster-admin role is only used where required (Manual)",
+              "audit": "kubectl get clusterrolebindings -o=custom-columns=NAME:.metadata.name,ROLE:.roleRef.name,SUBJECT:.subjects[*].name --no-headers | while read -r role_name role_binding subject\ndo\n  if [[ \"${role_name}\" != \"cluster-admin\" && \"${role_binding}\" == \"cluster-admin\" ]]; then\n    is_compliant=\"false\"\n  else\n    is_compliant=\"true\"\n  fi;\n  echo \"**role_name: ${role_name} role_binding: ${role_binding} subject: ${subject} is_compliant: ${is_compliant}\"\ndone\n",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "",
+              "remediation": "Identify all clusterrolebindings to the cluster-admin role. Check if they are used and\nif they need this role or if they could use a role with fewer privileges.\nWhere possible, first bind users to a lower privileged role and then remove the\nclusterrolebinding to the cluster-admin role : kubectl delete clusterrolebinding [name]\nCondition: is_compliant is false if rolename is not cluster-admin and rolebinding is cluster-admin.\n",
+              "test_info": [
+                "Identify all clusterrolebindings to the cluster-admin role. Check if they are used and\nif they need this role or if they could use a role with fewer privileges.\nWhere possible, first bind users to a lower privileged role and then remove the\nclusterrolebinding to the cluster-admin role : kubectl delete clusterrolebinding [name]\nCondition: is_compliant is false if rolename is not cluster-admin and rolebinding is cluster-admin.\n"
+              ],
+              "status": "WARN",
+              "actual_value": "Error from server (Forbidden): clusterrolebindings.rbac.authorization.k8s.io is forbidden: User \"system:serviceaccount:default:default\" cannot list resource \"clusterrolebindings\" in API group \"rbac.authorization.k8s.io\" at the cluster scope: Azure does not have opinion for this user.",
+              "scored": false,
+              "IsMultiple": true,
+              "expected_result": "'is_compliant' is present"
+            },
+            {
+              "test_number": "5.1.2",
+              "test_desc": "Minimize access to secrets (Manual)",
+              "audit": "echo \"canGetListWatchSecretsAsSystemAuthenticated: $(kubectl auth can-i get,list,watch secrets --all-namespaces --as=system:authenticated)\"",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "",
+              "remediation": "Where possible, remove get, list and watch access to Secret objects in the cluster.\n",
+              "test_info": [
+                "Where possible, remove get, list and watch access to Secret objects in the cluster.\n"
+              ],
+              "status": "WARN",
+              "actual_value": "E1031 14:49:28.856557      95 memcache.go:265] \"Unhandled Error\" err=\"couldn't get current server API group list: Get \\\"http://localhost:8080/api?timeout=32s\\\": dial tcp [::1]:8080: connect: connection refused\"\nE1031 14:49:28.857000      95 memcache.go:265] \"Unhandled Error\" err=\"couldn't get current server API group list: Get \\\"http://localhost:8080/api?timeout=32s\\\": dial tcp [::1]:8080: connect: connection refused\"\nWarning: the server doesn't have a resource type 'secrets'\n\nThe connection to the server localhost:8080 was refused - did you specify the right host or port?\ncanGetListWatchSecretsAsSystemAuthenticated:",
+              "scored": false,
+              "IsMultiple": false,
+              "expected_result": "'canGetListWatchSecretsAsSystemAuthenticated' is equal to 'no'"
+            },
+            {
+              "test_number": "5.1.3",
+              "test_desc": "Minimize wildcard use in Roles and ClusterRoles (Manual)",
+              "audit": "# Check Roles\nkubectl get roles --all-namespaces -o custom-columns=ROLE_NAMESPACE:.metadata.namespace,ROLE_NAME:.metadata.name --no-headers | while read -r role_namespace role_name\ndo\n  role_rules=$(kubectl get role -n \"${role_namespace}\" \"${role_name}\" -o=json | jq -c '.rules')\n  if echo \"${role_rules}\" | grep -q \"\\[\\\"\\*\\\"\\]\"; then\n    role_is_compliant=\"false\"\n  else\n    role_is_compliant=\"true\"\n  fi;\n  echo \"**role_name: ${role_name} role_namespace: ${role_namespace} role_rules: ${role_rules} role_is_compliant: ${role_is_compliant}\"\ndone\n\n# Check ClusterRoles\nkubectl get clusterroles -o custom-columns=CLUSTERROLE_NAME:.metadata.name --no-headers | while read -r clusterrole_name\ndo\n  clusterrole_rules=$(kubectl get clusterrole \"${clusterrole_name}\" -o=json | jq -c '.rules')\n  if echo \"${clusterrole_rules}\" | grep -q \"\\[\\\"\\*\\\"\\]\"; then\n    clusterrole_is_compliant=\"false\"\n  else\n    clusterrole_is_compliant=\"true\"\n  fi;\necho \"**clusterrole_name: ${clusterrole_name} clusterrole_rules: ${clusterrole_rules} clusterrole_is_compliant: ${clusterrole_is_compliant}\"\ndone\n",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "",
+              "remediation": "Where possible replace any use of wildcards [\"*\"] in roles and clusterroles with specific\nobjects or actions.\nCondition: role_is_compliant is false if [\"*\"] is found in rules.\nCondition: clusterrole_is_compliant is false if [\"*\"] is found in rules.\n",
+              "test_info": [
+                "Where possible replace any use of wildcards [\"*\"] in roles and clusterroles with specific\nobjects or actions.\nCondition: role_is_compliant is false if [\"*\"] is found in rules.\nCondition: clusterrole_is_compliant is false if [\"*\"] is found in rules.\n"
+              ],
+              "status": "WARN",
+              "actual_value": "Error from server (Forbidden): roles.rbac.authorization.k8s.io is forbidden: User \"system:serviceaccount:default:default\" cannot list resource \"roles\" in API group \"rbac.authorization.k8s.io\" at the cluster scope: Azure does not have opinion for this user.\nError from server (Forbidden): clusterroles.rbac.authorization.k8s.io is forbidden: User \"system:serviceaccount:default:default\" cannot list resource \"clusterroles\" in API group \"rbac.authorization.k8s.io\" at the cluster scope: Azure does not have opinion for this user.",
+              "scored": false,
+              "IsMultiple": true,
+              "expected_result": "'role_is_compliant' is present OR 'clusterrole_is_compliant' is present"
+            },
+            {
+              "test_number": "5.1.4",
+              "test_desc": "Minimize access to create pods (Manual)",
+              "audit": "echo \"canCreatePodsAsSystemAuthenticated: $(kubectl auth can-i create pods --all-namespaces --as=system:authenticated)\"\n",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "",
+              "remediation": "Where possible, remove create access to pod objects in the cluster.\n",
+              "test_info": [
+                "Where possible, remove create access to pod objects in the cluster.\n"
+              ],
+              "status": "WARN",
+              "actual_value": "E1031 14:49:29.072382     114 memcache.go:265] \"Unhandled Error\" err=\"couldn't get current server API group list: Get \\\"http://localhost:8080/api?timeout=32s\\\": dial tcp [::1]:8080: connect: connection refused\"\nE1031 14:49:29.072864     114 memcache.go:265] \"Unhandled Error\" err=\"couldn't get current server API group list: Get \\\"http://localhost:8080/api?timeout=32s\\\": dial tcp [::1]:8080: connect: connection refused\"\nWarning: the server doesn't have a resource type 'pods'\n\nThe connection to the server localhost:8080 was refused - did you specify the right host or port?\ncanCreatePodsAsSystemAuthenticated:",
+              "scored": false,
+              "IsMultiple": false,
+              "expected_result": "'canCreatePodsAsSystemAuthenticated' is equal to 'no'"
+            },
+            {
+              "test_number": "5.1.5",
+              "test_desc": "Ensure that default service accounts are not actively used (Manual)",
+              "audit": "kubectl get serviceaccount --all-namespaces --field-selector metadata.name=default -o=json | jq -r '.items[] | \" namespace: \\(.metadata.namespace), kind: \\(.kind), name: \\(.metadata.name), automountServiceAccountToken: \\(.automountServiceAccountToken | if . == null then \"notset\" else . end )\"' | xargs -L 1\n",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "",
+              "remediation": "Create explicit service accounts wherever a Kubernetes workload requires specific access\nto the Kubernetes API server.\nModify the configuration of each default service account to include this value\n`automountServiceAccountToken: false`.\n",
+              "test_info": [
+                "Create explicit service accounts wherever a Kubernetes workload requires specific access\nto the Kubernetes API server.\nModify the configuration of each default service account to include this value\n`automountServiceAccountToken: false`.\n"
+              ],
+              "status": "WARN",
+              "actual_value": "Error from server (Forbidden): serviceaccounts \"default\" is forbidden: User \"system:serviceaccount:default:default\" cannot list resource \"serviceaccounts\" in API group \"\" at the cluster scope: Azure does not have opinion for this user.",
+              "scored": false,
+              "IsMultiple": true,
+              "expected_result": "'automountServiceAccountToken' is present"
+            },
+            {
+              "test_number": "5.1.6",
+              "test_desc": "Ensure that Service Account Tokens are only mounted where necessary (Manual)",
+              "audit": "kubectl get pods --all-namespaces -o custom-columns=POD_NAMESPACE:.metadata.namespace,POD_NAME:.metadata.name,POD_SERVICE_ACCOUNT:.spec.serviceAccount,POD_IS_AUTOMOUNTSERVICEACCOUNTTOKEN:.spec.automountServiceAccountToken --no-headers | while read -r pod_namespace pod_name pod_service_account pod_is_automountserviceaccounttoken\ndo\n  # Retrieve automountServiceAccountToken's value for ServiceAccount and Pod, set to notset if null or <none>.\n  svacc_is_automountserviceaccounttoken=$(kubectl get serviceaccount -n \"${pod_namespace}\" \"${pod_service_account}\" -o json | jq -r '.automountServiceAccountToken' | sed -e 's/<none>/notset/g' -e 's/null/notset/g')\n  pod_is_automountserviceaccounttoken=$(echo \"${pod_is_automountserviceaccounttoken}\" | sed -e 's/<none>/notset/g' -e 's/null/notset/g')\n  if [ \"${svacc_is_automountserviceaccounttoken}\" = \"false\" ] && ( [ \"${pod_is_automountserviceaccounttoken}\" = \"false\" ] || [ \"${pod_is_automountserviceaccounttoken}\" = \"notset\" ] ); then\n    is_compliant=\"true\"\n  elif [ \"${svacc_is_automountserviceaccounttoken}\" = \"true\" ] && [ \"${pod_is_automountserviceaccounttoken}\" = \"false\" ]; then\n    is_compliant=\"true\"\n  else\n    is_compliant=\"false\"\n  fi\n  echo \"**namespace: ${pod_namespace} pod_name: ${pod_name} service_account: ${pod_service_account} pod_is_automountserviceaccounttoken: ${pod_is_automountserviceaccounttoken} svacc_is_automountServiceAccountToken: ${svacc_is_automountserviceaccounttoken} is_compliant: ${is_compliant}\"\ndone\n",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "",
+              "remediation": "Modify the definition of ServiceAccounts and Pods which do not need to mount service\naccount tokens to disable it, with `automountServiceAccountToken: false`.\nIf both the ServiceAccount and the Pod's .spec specify a value for automountServiceAccountToken, the Pod spec takes precedence.\nCondition: Pod is_compliant to true when\n  - ServiceAccount is automountServiceAccountToken: false and Pod is automountServiceAccountToken: false or notset\n  - ServiceAccount is automountServiceAccountToken: true notset and Pod is automountServiceAccountToken: false\n",
+              "test_info": [
+                "Modify the definition of ServiceAccounts and Pods which do not need to mount service\naccount tokens to disable it, with `automountServiceAccountToken: false`.\nIf both the ServiceAccount and the Pod's .spec specify a value for automountServiceAccountToken, the Pod spec takes precedence.\nCondition: Pod is_compliant to true when\n  - ServiceAccount is automountServiceAccountToken: false and Pod is automountServiceAccountToken: false or notset\n  - ServiceAccount is automountServiceAccountToken: true notset and Pod is automountServiceAccountToken: false\n"
+              ],
+              "status": "WARN",
+              "actual_value": "Error from server (Forbidden): pods is forbidden: User \"system:serviceaccount:default:default\" cannot list resource \"pods\" in API group \"\" at the cluster scope: Azure does not have opinion for this user.",
+              "scored": false,
+              "IsMultiple": true,
+              "expected_result": "'is_compliant' is present"
+            },
+            {
+              "test_number": "5.1.7",
+              "test_desc": "Avoid use of system:masters group (Manual)",
+              "audit": "",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "manual",
+              "remediation": "Remove the system:masters group from all users in the cluster.\n",
+              "test_info": [
+                "Remove the system:masters group from all users in the cluster.\n"
+              ],
+              "status": "WARN",
+              "actual_value": "",
+              "scored": false,
+              "IsMultiple": false,
+              "expected_result": "",
+              "reason": "Test marked as a manual test"
+            },
+            {
+              "test_number": "5.1.8",
+              "test_desc": "Limit use of the Bind, Impersonate and Escalate permissions in the Kubernetes cluster (Manual)",
+              "audit": "",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "manual",
+              "remediation": "Where possible, remove the impersonate, bind and escalate rights from subjects.\n",
+              "test_info": [
+                "Where possible, remove the impersonate, bind and escalate rights from subjects.\n"
+              ],
+              "status": "WARN",
+              "actual_value": "",
+              "scored": false,
+              "IsMultiple": false,
+              "expected_result": "",
+              "reason": "Test marked as a manual test"
+            },
+            {
+              "test_number": "5.1.9",
+              "test_desc": "Minimize access to create persistent volumes (Manual)",
+              "audit": "",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "manual",
+              "remediation": "Where possible, remove create access to PersistentVolume objects in the cluster.\n",
+              "test_info": [
+                "Where possible, remove create access to PersistentVolume objects in the cluster.\n"
+              ],
+              "status": "WARN",
+              "actual_value": "",
+              "scored": false,
+              "IsMultiple": false,
+              "expected_result": "",
+              "reason": "Test marked as a manual test"
+            },
+            {
+              "test_number": "5.1.10",
+              "test_desc": "Minimize access to the proxy sub-resource of nodes (Manual)",
+              "audit": "",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "manual",
+              "remediation": "Where possible, remove access to the proxy sub-resource of node objects.\n",
+              "test_info": [
+                "Where possible, remove access to the proxy sub-resource of node objects.\n"
+              ],
+              "status": "WARN",
+              "actual_value": "",
+              "scored": false,
+              "IsMultiple": false,
+              "expected_result": "",
+              "reason": "Test marked as a manual test"
+            },
+            {
+              "test_number": "5.1.11",
+              "test_desc": "Minimize access to the approval sub-resource of certificatesigningrequests objects (Manual)",
+              "audit": "",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "manual",
+              "remediation": "Where possible, remove access to the approval sub-resource of certificatesigningrequests objects.\n",
+              "test_info": [
+                "Where possible, remove access to the approval sub-resource of certificatesigningrequests objects.\n"
+              ],
+              "status": "WARN",
+              "actual_value": "",
+              "scored": false,
+              "IsMultiple": false,
+              "expected_result": "",
+              "reason": "Test marked as a manual test"
+            },
+            {
+              "test_number": "5.1.12",
+              "test_desc": "Minimize access to webhook configuration objects (Manual)",
+              "audit": "",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "manual",
+              "remediation": "Where possible, remove access to the validatingwebhookconfigurations or mutatingwebhookconfigurations objects\n",
+              "test_info": [
+                "Where possible, remove access to the validatingwebhookconfigurations or mutatingwebhookconfigurations objects\n"
+              ],
+              "status": "WARN",
+              "actual_value": "",
+              "scored": false,
+              "IsMultiple": false,
+              "expected_result": "",
+              "reason": "Test marked as a manual test"
+            },
+            {
+              "test_number": "5.1.13",
+              "test_desc": "Minimize access to the service account token creation (Manual)",
+              "audit": "",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "manual",
+              "remediation": "Where possible, remove access to the token sub-resource of serviceaccount objects.\n",
+              "test_info": [
+                "Where possible, remove access to the token sub-resource of serviceaccount objects.\n"
+              ],
+              "status": "WARN",
+              "actual_value": "",
+              "scored": false,
+              "IsMultiple": false,
+              "expected_result": "",
+              "reason": "Test marked as a manual test"
+            }
+          ]
+        },
+        {
+          "section": "5.2",
+          "type": "",
+          "pass": 0,
+          "fail": 0,
+          "warn": 13,
+          "info": 0,
+          "desc": "Pod Security Standards",
+          "results": [
+            {
+              "test_number": "5.2.1",
+              "test_desc": "Ensure that the cluster has at least one active policy control mechanism in place (Manual)",
+              "audit": "",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "manual",
+              "remediation": "Ensure that either Pod Security Admission or an external policy control system is in place\nfor every namespace which contains user workloads.\n",
+              "test_info": [
+                "Ensure that either Pod Security Admission or an external policy control system is in place\nfor every namespace which contains user workloads.\n"
+              ],
+              "status": "WARN",
+              "actual_value": "",
+              "scored": false,
+              "IsMultiple": false,
+              "expected_result": "",
+              "reason": "Test marked as a manual test"
+            },
+            {
+              "test_number": "5.2.2",
+              "test_desc": "Minimize the admission of privileged containers (Manual)",
+              "audit": "kubectl get pods --all-namespaces -o custom-columns=POD_NAME:.metadata.name,POD_NAMESPACE:.metadata.namespace --no-headers | while read -r pod_name pod_namespace\ndo\n  # Retrieve container(s) for each Pod.\n  kubectl get pod \"${pod_name}\" --namespace \"${pod_namespace}\" -o json | jq -c '.spec.containers[]' | while read -r container\n  do\n    # Retrieve container's name.\n    container_name=$(echo ${container} | jq -r '.name')\n    # Retrieve container's .securityContext.privileged value.\n    container_privileged=$(echo ${container} | jq -r '.securityContext.privileged' | sed -e 's/null/notset/g')\n    if [ \"${container_privileged}\" = \"false\" ] || [ \"${container_privileged}\" = \"notset\" ] ; then\n      echo \"***pod_name: ${pod_name} container_name: ${container_name} pod_namespace: ${pod_namespace} is_container_privileged: ${container_privileged} is_compliant: true\"\n    else\n      echo \"***pod_name: ${pod_name} container_name: ${container_name} pod_namespace: ${pod_namespace} is_container_privileged: ${container_privileged} is_compliant: false\"\n    fi\n  done\ndone\n",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "",
+              "remediation": "Add policies to each namespace in the cluster which has user workloads to restrict the\nadmission of privileged containers.\nAudit: the audit list all pods' containers to retrieve their .securityContext.privileged value.\nCondition: is_compliant is false if container's `.securityContext.privileged` is set to `true`.\nDefault: by default, there are no restrictions on the creation of privileged containers.\n",
+              "test_info": [
+                "Add policies to each namespace in the cluster which has user workloads to restrict the\nadmission of privileged containers.\nAudit: the audit list all pods' containers to retrieve their .securityContext.privileged value.\nCondition: is_compliant is false if container's `.securityContext.privileged` is set to `true`.\nDefault: by default, there are no restrictions on the creation of privileged containers.\n"
+              ],
+              "status": "WARN",
+              "actual_value": "Error from server (Forbidden): pods is forbidden: User \"system:serviceaccount:default:default\" cannot list resource \"pods\" in API group \"\" at the cluster scope: Azure does not have opinion for this user.",
+              "scored": false,
+              "IsMultiple": true,
+              "expected_result": "'is_compliant' is present"
+            },
+            {
+              "test_number": "5.2.3",
+              "test_desc": "Minimize the admission of containers wishing to share the host process ID namespace (Manual)",
+              "audit": "kubectl get pods --all-namespaces -o custom-columns=POD_NAME:.metadata.name,POD_NAMESPACE:.metadata.namespace --no-headers | while read -r pod_name pod_namespace\ndo\n  # Retrieve spec.hostPID for each pod.\n  pod_hostpid=$(kubectl get pod \"${pod_name}\" --namespace \"${pod_namespace}\" -o jsonpath='{.spec.hostPID}' 2>/dev/null)\n  if [ -z \"${pod_hostpid}\" ]; then\n    pod_hostpid=\"false\"\n    echo \"***pod_name: ${pod_name} pod_namespace: ${pod_namespace} is_pod_hostpid: ${pod_hostpid} is_compliant: true\"\n  else\n    echo \"***pod_name: ${pod_name} pod_namespace: ${pod_namespace} is_pod_hostpid: ${pod_hostpid} is_compliant: false\"\n  fi\ndone\n",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "",
+              "remediation": "Add policies to each namespace in the cluster which has user workloads to restrict the\nadmission of `hostPID` containers.\nAudit: the audit retrieves each Pod' spec.hostPID.\nCondition: is_compliant is false if Pod's spec.hostPID is set to `true`.\nDefault: by default, there are no restrictions on the creation of hostPID containers.\n",
+              "test_info": [
+                "Add policies to each namespace in the cluster which has user workloads to restrict the\nadmission of `hostPID` containers.\nAudit: the audit retrieves each Pod' spec.hostPID.\nCondition: is_compliant is false if Pod's spec.hostPID is set to `true`.\nDefault: by default, there are no restrictions on the creation of hostPID containers.\n"
+              ],
+              "status": "WARN",
+              "actual_value": "Error from server (Forbidden): pods is forbidden: User \"system:serviceaccount:default:default\" cannot list resource \"pods\" in API group \"\" at the cluster scope: Azure does not have opinion for this user.",
+              "scored": false,
+              "IsMultiple": true,
+              "expected_result": "'is_compliant' is present"
+            },
+            {
+              "test_number": "5.2.4",
+              "test_desc": "Minimize the admission of containers wishing to share the host IPC namespace (Manual)",
+              "audit": "kubectl get pods --all-namespaces -o custom-columns=POD_NAME:.metadata.name,POD_NAMESPACE:.metadata.namespace --no-headers | while read -r pod_name pod_namespace\ndo\n  # Retrieve spec.hostIPC for each pod.\n  pod_hostipc=$(kubectl get pod \"${pod_name}\" --namespace \"${pod_namespace}\" -o jsonpath='{.spec.hostIPC}' 2>/dev/null)\n  if [ -z \"${pod_hostipc}\" ]; then\n    pod_hostipc=\"false\"\n    echo \"***pod_name: ${pod_name} pod_namespace: ${pod_namespace} is_pod_hostipc: ${pod_hostipc} is_compliant: true\"\n  else\n    echo \"***pod_name: ${pod_name} pod_namespace: ${pod_namespace} is_pod_hostipc: ${pod_hostipc} is_compliant: false\"\n  fi\ndone\n",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "",
+              "remediation": "Add policies to each namespace in the cluster which has user workloads to restrict the\nadmission of `hostIPC` containers.\nAudit: the audit retrieves each Pod' spec.IPC.\nCondition: is_compliant is false if Pod's spec.hostIPC is set to `true`.\nDefault: by default, there are no restrictions on the creation of hostIPC containers.\n",
+              "test_info": [
+                "Add policies to each namespace in the cluster which has user workloads to restrict the\nadmission of `hostIPC` containers.\nAudit: the audit retrieves each Pod' spec.IPC.\nCondition: is_compliant is false if Pod's spec.hostIPC is set to `true`.\nDefault: by default, there are no restrictions on the creation of hostIPC containers.\n"
+              ],
+              "status": "WARN",
+              "actual_value": "Error from server (Forbidden): pods is forbidden: User \"system:serviceaccount:default:default\" cannot list resource \"pods\" in API group \"\" at the cluster scope: Azure does not have opinion for this user.",
+              "scored": false,
+              "IsMultiple": true,
+              "expected_result": "'is_compliant' is present"
+            },
+            {
+              "test_number": "5.2.5",
+              "test_desc": "Minimize the admission of containers wishing to share the host network namespace (Manual)",
+              "audit": "kubectl get pods --all-namespaces -o custom-columns=POD_NAME:.metadata.name,POD_NAMESPACE:.metadata.namespace --no-headers | while read -r pod_name pod_namespace\ndo\n  # Retrieve spec.hostNetwork for each pod.\n  pod_hostnetwork=$(kubectl get pod \"${pod_name}\" --namespace \"${pod_namespace}\" -o jsonpath='{.spec.hostNetwork}' 2>/dev/null)\n  if [ -z \"${pod_hostnetwork}\" ]; then\n    pod_hostnetwork=\"false\"\n    echo \"***pod_name: ${pod_name} pod_namespace: ${pod_namespace} is_pod_hostnetwork: ${pod_hostnetwork} is_compliant: true\"\n  else\n    echo \"***pod_name: ${pod_name} pod_namespace: ${pod_namespace} is_pod_hostnetwork: ${pod_hostnetwork} is_compliant: false\"\n  fi\ndone\n",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "",
+              "remediation": "Add policies to each namespace in the cluster which has user workloads to restrict the\nadmission of `hostNetwork` containers.\nAudit: the audit retrieves each Pod' spec.hostNetwork.\nCondition: is_compliant is false if Pod's spec.hostNetwork is set to `true`.\nDefault: by default, there are no restrictions on the creation of hostNetwork containers.\n",
+              "test_info": [
+                "Add policies to each namespace in the cluster which has user workloads to restrict the\nadmission of `hostNetwork` containers.\nAudit: the audit retrieves each Pod' spec.hostNetwork.\nCondition: is_compliant is false if Pod's spec.hostNetwork is set to `true`.\nDefault: by default, there are no restrictions on the creation of hostNetwork containers.\n"
+              ],
+              "status": "WARN",
+              "actual_value": "Error from server (Forbidden): pods is forbidden: User \"system:serviceaccount:default:default\" cannot list resource \"pods\" in API group \"\" at the cluster scope: Azure does not have opinion for this user.",
+              "scored": false,
+              "IsMultiple": true,
+              "expected_result": "'is_compliant' is present"
+            },
+            {
+              "test_number": "5.2.6",
+              "test_desc": "Minimize the admission of containers with allowPrivilegeEscalation (Manual)",
+              "audit": "kubectl get pods --all-namespaces -o custom-columns=POD_NAME:.metadata.name,POD_NAMESPACE:.metadata.namespace --no-headers | while read -r pod_name pod_namespace\ndo\n  # Retrieve container(s) for each Pod.\n  kubectl get pod \"${pod_name}\" --namespace \"${pod_namespace}\" -o json | jq -c '.spec.containers[]' | while read -r container\n  do\n    # Retrieve container's name\n    container_name=$(echo ${container} | jq -r '.name')\n    # Retrieve container's .securityContext.allowPrivilegeEscalation\n    container_allowprivesc=$(echo ${container} | jq -r '.securityContext.allowPrivilegeEscalation' | sed -e 's/null/notset/g')\n    if [ \"${container_allowprivesc}\" = \"false\" ] || [ \"${container_allowprivesc}\" = \"notset\" ]; then\n      echo \"***pod_name: ${pod_name} container_name: ${container_name} pod_namespace: ${pod_namespace} is_container_allowprivesc: ${container_allowprivesc} is_compliant: true\"\n    else\n      echo \"***pod_name: ${pod_name} container_name: ${container_name} pod_namespace: ${pod_namespace} is_container_allowprivesc: ${container_allowprivesc} is_compliant: false\"\n    fi\n  done\ndone\n",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "",
+              "remediation": "Add policies to each namespace in the cluster which has user workloads to restrict the\nadmission of containers with `.securityContext.allowPrivilegeEscalation` set to `true`.\nAudit: the audit retrieves each Pod's container(s) `.securityContext.allowPrivilegeEscalation`.\nCondition: is_compliant is false if container's `.securityContext.allowPrivilegeEscalation` is set to `true`.\nDefault: If notset, privilege escalation is allowed (default to true). However if PSP/PSA is used with a `restricted` profile,\nprivilege escalation is explicitly disallowed unless configured otherwise.\n",
+              "test_info": [
+                "Add policies to each namespace in the cluster which has user workloads to restrict the\nadmission of containers with `.securityContext.allowPrivilegeEscalation` set to `true`.\nAudit: the audit retrieves each Pod's container(s) `.securityContext.allowPrivilegeEscalation`.\nCondition: is_compliant is false if container's `.securityContext.allowPrivilegeEscalation` is set to `true`.\nDefault: If notset, privilege escalation is allowed (default to true). However if PSP/PSA is used with a `restricted` profile,\nprivilege escalation is explicitly disallowed unless configured otherwise.\n"
+              ],
+              "status": "WARN",
+              "actual_value": "Error from server (Forbidden): pods is forbidden: User \"system:serviceaccount:default:default\" cannot list resource \"pods\" in API group \"\" at the cluster scope: Azure does not have opinion for this user.",
+              "scored": false,
+              "IsMultiple": true,
+              "expected_result": "'is_compliant' is present"
+            },
+            {
+              "test_number": "5.2.7",
+              "test_desc": "Minimize the admission of root containers (Manual)",
+              "audit": "",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "manual",
+              "remediation": "Create a policy for each namespace in the cluster, ensuring that either `MustRunAsNonRoot`\nor `MustRunAs` with the range of UIDs not including 0, is set.\n",
+              "test_info": [
+                "Create a policy for each namespace in the cluster, ensuring that either `MustRunAsNonRoot`\nor `MustRunAs` with the range of UIDs not including 0, is set.\n"
+              ],
+              "status": "WARN",
+              "actual_value": "",
+              "scored": false,
+              "IsMultiple": false,
+              "expected_result": "",
+              "reason": "Test marked as a manual test"
+            },
+            {
+              "test_number": "5.2.8",
+              "test_desc": "Minimize the admission of containers with the NET_RAW capability (Manual)",
+              "audit": "",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "manual",
+              "remediation": "Add policies to each namespace in the cluster which has user workloads to restrict the\nadmission of containers with the `NET_RAW` capability.\n",
+              "test_info": [
+                "Add policies to each namespace in the cluster which has user workloads to restrict the\nadmission of containers with the `NET_RAW` capability.\n"
+              ],
+              "status": "WARN",
+              "actual_value": "",
+              "scored": false,
+              "IsMultiple": false,
+              "expected_result": "",
+              "reason": "Test marked as a manual test"
+            },
+            {
+              "test_number": "5.2.9",
+              "test_desc": "Minimize the admission of containers with added capabilities (Manual)",
+              "audit": "kubectl get pods --all-namespaces -o custom-columns=POD_NAME:.metadata.name,POD_NAMESPACE:.metadata.namespace --no-headers | while read -r pod_name pod_namespace\ndo\n  # Retrieve container(s) for each Pod.\n  kubectl get pod \"${pod_name}\" --namespace \"${pod_namespace}\" -o json | jq -c '.spec.containers[]' | while read -r container\n  do\n    # Retrieve container's name\n    container_name=$(echo ${container} | jq -r '.name')\n    # Retrieve container's added capabilities\n    container_caps_add=$(echo ${container} | jq -r '.securityContext.capabilities.add' | sed -e 's/null/notset/g')\n    # Set is_compliant to true by default.\n    is_compliant=true\n    caps_list=\"\"\n    if [ \"${container_caps_add}\" != \"notset\" ]; then\n      # Loop through all caps and append caps_list, then set is_compliant to false.\n      for cap in $(echo \"${container_caps_add}\" | jq -r '.[]'); do\n      caps_list+=\"${cap},\"\n      is_compliant=false\n      done\n      # Remove trailing comma for the last list member.\n      caps_list=${caps_list%,}\n    fi\n    if [ \"${is_compliant}\" = true ]; then\n      echo \"***pod_name: ${pod_name} container_name: ${container_name} pod_namespace: ${pod_namespace} container_caps_add: ${container_caps_add} is_compliant: true\"\n    else\n      echo \"***pod_name: ${pod_name} container_name: ${container_name} pod_namespace: ${pod_namespace} container_caps_add: ${caps_list} is_compliant: false\"\n    fi\n  done\ndone\n",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "",
+              "remediation": "Ensure that `allowedCapabilities` is not present in policies for the cluster unless\nit is set to an empty array.\nAudit: the audit retrieves each Pod's container(s) added capabilities.\nCondition: is_compliant is false if added capabilities are added for a given container.\nDefault: Containers run with a default set of capabilities as assigned by the Container Runtime.\n",
+              "test_info": [
+                "Ensure that `allowedCapabilities` is not present in policies for the cluster unless\nit is set to an empty array.\nAudit: the audit retrieves each Pod's container(s) added capabilities.\nCondition: is_compliant is false if added capabilities are added for a given container.\nDefault: Containers run with a default set of capabilities as assigned by the Container Runtime.\n"
+              ],
+              "status": "WARN",
+              "actual_value": "Error from server (Forbidden): pods is forbidden: User \"system:serviceaccount:default:default\" cannot list resource \"pods\" in API group \"\" at the cluster scope: Azure does not have opinion for this user.",
+              "scored": false,
+              "IsMultiple": true,
+              "expected_result": "'is_compliant' is present"
+            },
+            {
+              "test_number": "5.2.10",
+              "test_desc": "Minimize the admission of containers with capabilities assigned (Manual)",
+              "audit": "",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "manual",
+              "remediation": "Review the use of capabilites in applications running on your cluster. Where a namespace\ncontains applications which do not require any Linux capabities to operate consider adding\na PSP which forbids the admission of containers which do not drop all capabilities.\n",
+              "test_info": [
+                "Review the use of capabilites in applications running on your cluster. Where a namespace\ncontains applications which do not require any Linux capabities to operate consider adding\na PSP which forbids the admission of containers which do not drop all capabilities.\n"
+              ],
+              "status": "WARN",
+              "actual_value": "",
+              "scored": false,
+              "IsMultiple": false,
+              "expected_result": "",
+              "reason": "Test marked as a manual test"
+            },
+            {
+              "test_number": "5.2.11",
+              "test_desc": "Minimize the admission of Windows HostProcess containers (Manual)",
+              "audit": "",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "manual",
+              "remediation": "Add policies to each namespace in the cluster which has user workloads to restrict the\nadmission of containers that have `.securityContext.windowsOptions.hostProcess` set to `true`.\n",
+              "test_info": [
+                "Add policies to each namespace in the cluster which has user workloads to restrict the\nadmission of containers that have `.securityContext.windowsOptions.hostProcess` set to `true`.\n"
+              ],
+              "status": "WARN",
+              "actual_value": "",
+              "scored": false,
+              "IsMultiple": false,
+              "expected_result": "",
+              "reason": "Test marked as a manual test"
+            },
+            {
+              "test_number": "5.2.12",
+              "test_desc": "Minimize the admission of HostPath volumes (Manual)",
+              "audit": "",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "manual",
+              "remediation": "Add policies to each namespace in the cluster which has user workloads to restrict the\nadmission of containers with `hostPath` volumes.\n",
+              "test_info": [
+                "Add policies to each namespace in the cluster which has user workloads to restrict the\nadmission of containers with `hostPath` volumes.\n"
+              ],
+              "status": "WARN",
+              "actual_value": "",
+              "scored": false,
+              "IsMultiple": false,
+              "expected_result": "",
+              "reason": "Test marked as a manual test"
+            },
+            {
+              "test_number": "5.2.13",
+              "test_desc": "Minimize the admission of containers which use HostPorts (Manual)",
+              "audit": "",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "manual",
+              "remediation": "Add policies to each namespace in the cluster which has user workloads to restrict the\nadmission of containers which use `hostPort` sections.\n",
+              "test_info": [
+                "Add policies to each namespace in the cluster which has user workloads to restrict the\nadmission of containers which use `hostPort` sections.\n"
+              ],
+              "status": "WARN",
+              "actual_value": "",
+              "scored": false,
+              "IsMultiple": false,
+              "expected_result": "",
+              "reason": "Test marked as a manual test"
+            }
+          ]
+        },
+        {
+          "section": "5.3",
+          "type": "",
+          "pass": 0,
+          "fail": 0,
+          "warn": 2,
+          "info": 0,
+          "desc": "Network Policies and CNI",
+          "results": [
+            {
+              "test_number": "5.3.1",
+              "test_desc": "Ensure that the CNI in use supports NetworkPolicies (Manual)",
+              "audit": "",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "manual",
+              "remediation": "If the CNI plugin in use does not support network policies, consideration should be given to\nmaking use of a different plugin, or finding an alternate mechanism for restricting traffic\nin the Kubernetes cluster.\n",
+              "test_info": [
+                "If the CNI plugin in use does not support network policies, consideration should be given to\nmaking use of a different plugin, or finding an alternate mechanism for restricting traffic\nin the Kubernetes cluster.\n"
+              ],
+              "status": "WARN",
+              "actual_value": "",
+              "scored": false,
+              "IsMultiple": false,
+              "expected_result": "",
+              "reason": "Test marked as a manual test"
+            },
+            {
+              "test_number": "5.3.2",
+              "test_desc": "Ensure that all Namespaces have NetworkPolicies defined (Manual)",
+              "audit": "",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "manual",
+              "remediation": "Follow the documentation and create NetworkPolicy objects as you need them.\n",
+              "test_info": [
+                "Follow the documentation and create NetworkPolicy objects as you need them.\n"
+              ],
+              "status": "WARN",
+              "actual_value": "",
+              "scored": false,
+              "IsMultiple": false,
+              "expected_result": "",
+              "reason": "Test marked as a manual test"
+            }
+          ]
+        },
+        {
+          "section": "5.4",
+          "type": "",
+          "pass": 0,
+          "fail": 0,
+          "warn": 2,
+          "info": 0,
+          "desc": "Secrets Management",
+          "results": [
+            {
+              "test_number": "5.4.1",
+              "test_desc": "Prefer using Secrets as files over Secrets as environment variables (Manual)",
+              "audit": "",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "manual",
+              "remediation": "If possible, rewrite application code to read Secrets from mounted secret files, rather than\nfrom environment variables.\n",
+              "test_info": [
+                "If possible, rewrite application code to read Secrets from mounted secret files, rather than\nfrom environment variables.\n"
+              ],
+              "status": "WARN",
+              "actual_value": "",
+              "scored": false,
+              "IsMultiple": false,
+              "expected_result": "",
+              "reason": "Test marked as a manual test"
+            },
+            {
+              "test_number": "5.4.2",
+              "test_desc": "Consider external secret storage (Manual)",
+              "audit": "",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "manual",
+              "remediation": "Refer to the Secrets management options offered by your cloud provider or a third-party\nsecrets management solution.\n",
+              "test_info": [
+                "Refer to the Secrets management options offered by your cloud provider or a third-party\nsecrets management solution.\n"
+              ],
+              "status": "WARN",
+              "actual_value": "",
+              "scored": false,
+              "IsMultiple": false,
+              "expected_result": "",
+              "reason": "Test marked as a manual test"
+            }
+          ]
+        },
+        {
+          "section": "5.5",
+          "type": "",
+          "pass": 0,
+          "fail": 0,
+          "warn": 1,
+          "info": 0,
+          "desc": "Extensible Admission Control",
+          "results": [
+            {
+              "test_number": "5.5.1",
+              "test_desc": "Configure Image Provenance using ImagePolicyWebhook admission controller (Manual)",
+              "audit": "",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "manual",
+              "remediation": "Follow the Kubernetes documentation and setup image provenance.\n",
+              "test_info": [
+                "Follow the Kubernetes documentation and setup image provenance.\n"
+              ],
+              "status": "WARN",
+              "actual_value": "",
+              "scored": false,
+              "IsMultiple": false,
+              "expected_result": "",
+              "reason": "Test marked as a manual test"
+            }
+          ]
+        },
+        {
+          "section": "5.6",
+          "type": "",
+          "pass": 0,
+          "fail": 0,
+          "warn": 4,
+          "info": 0,
+          "desc": "General Policies",
+          "results": [
+            {
+              "test_number": "5.6.1",
+              "test_desc": "Create administrative boundaries between resources using namespaces (Manual)",
+              "audit": "",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "manual",
+              "remediation": "Follow the documentation and create namespaces for objects in your deployment as you need\nthem.\n",
+              "test_info": [
+                "Follow the documentation and create namespaces for objects in your deployment as you need\nthem.\n"
+              ],
+              "status": "WARN",
+              "actual_value": "",
+              "scored": false,
+              "IsMultiple": false,
+              "expected_result": "",
+              "reason": "Test marked as a manual test"
+            },
+            {
+              "test_number": "5.6.2",
+              "test_desc": "Ensure that the seccomp profile is set to docker/default in your Pod definitions (Manual)",
+              "audit": "",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "manual",
+              "remediation": "Use `securityContext` to enable the docker/default seccomp profile in your pod definitions.\nAn example is as below:\n  securityContext:\n    seccompProfile:\n      type: RuntimeDefault\n",
+              "test_info": [
+                "Use `securityContext` to enable the docker/default seccomp profile in your pod definitions.\nAn example is as below:\n  securityContext:\n    seccompProfile:\n      type: RuntimeDefault\n"
+              ],
+              "status": "WARN",
+              "actual_value": "",
+              "scored": false,
+              "IsMultiple": false,
+              "expected_result": "",
+              "reason": "Test marked as a manual test"
+            },
+            {
+              "test_number": "5.6.3",
+              "test_desc": "Apply SecurityContext to your Pods and Containers (Manual)",
+              "audit": "",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "manual",
+              "remediation": "Follow the Kubernetes documentation and apply SecurityContexts to your Pods. For a\nsuggested list of SecurityContexts, you may refer to the CIS Security Benchmark for Docker\nContainers.\n",
+              "test_info": [
+                "Follow the Kubernetes documentation and apply SecurityContexts to your Pods. For a\nsuggested list of SecurityContexts, you may refer to the CIS Security Benchmark for Docker\nContainers.\n"
+              ],
+              "status": "WARN",
+              "actual_value": "",
+              "scored": false,
+              "IsMultiple": false,
+              "expected_result": "",
+              "reason": "Test marked as a manual test"
+            },
+            {
+              "test_number": "5.6.4",
+              "test_desc": "The default namespace should not be used (Manual)",
+              "audit": "",
+              "AuditEnv": "",
+              "AuditConfig": "",
+              "type": "manual",
+              "remediation": "Ensure that namespaces are created to allow for appropriate segregation of Kubernetes\nresources and that all new resources are created in a specific namespace.\n",
+              "test_info": [
+                "Ensure that namespaces are created to allow for appropriate segregation of Kubernetes\nresources and that all new resources are created in a specific namespace.\n"
+              ],
+              "status": "WARN",
+              "actual_value": "",
+              "scored": false,
+              "IsMultiple": false,
+              "expected_result": "",
+              "reason": "Test marked as a manual test"
+            }
+          ]
+        }
+      ],
+      "total_pass": 0,
+      "total_fail": 0,
+      "total_warn": 35,
+      "total_info": 0
+    }
+  ],
+  "Totals": {
+    "total_pass": 1,
+    "total_fail": 11,
+    "total_warn": 49,
+    "total_info": 0
+  }
+}

@@ -1,0 +1,17 @@
+NAMESPACE     NAME                                             READY   STATUS    RESTARTS   AGE
+default       attacker                                         1/1     Running   0          16m
+default       kube-bench                                       0/1     Error     0          34s
+kube-system   azure-cns-pdhsp                                  1/1     Running   0          108m
+kube-system   azure-ip-masq-agent-tz2dd                        1/1     Running   0          108m
+kube-system   cloud-node-manager-7mf2v                         1/1     Running   0          108m
+kube-system   coredns-7945956757-6vwz8                         1/1     Running   0          110m
+kube-system   coredns-7945956757-pztj4                         1/1     Running   0          108m
+kube-system   coredns-autoscaler-65cc77f87-xhmv9               1/1     Running   0          110m
+kube-system   csi-azuredisk-node-nflrp                         3/3     Running   0          108m
+kube-system   csi-azurefile-node-xlzd9                         3/3     Running   0          108m
+kube-system   konnectivity-agent-6dc748d77f-vh7kn              1/1     Running   0          108m
+kube-system   konnectivity-agent-6dc748d77f-xtpsl              1/1     Running   0          109m
+kube-system   konnectivity-agent-autoscaler-6c64c6dfc9-ls5bm   1/1     Running   0          110m
+kube-system   kube-proxy-mbvzb                                 1/1     Running   0          108m
+kube-system   metrics-server-684b6644f5-8r6x5                  2/2     Running   0          107m
+kube-system   metrics-server-684b6644f5-mbqwk                  2/2     Running   0          108m
