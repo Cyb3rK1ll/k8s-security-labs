@@ -1,3 +1,9 @@
+# Kubernetes Security Labs – Claudio Magagnotti
+
+> **Cybersecurity Architect | 12+ Years in Cloud & DevSecOps**  
+> **Azure AKS | AWS EKS | Zero Trust | CISSP (2025) | CKA | AZ-500**  
+> **Spain | [clau.magagnotti@hotmail.com](mailto:clau.magagnotti@hotmail.com)**  
+
 # LAB 1: Secure AKS Cluster (Zero-Trust, RBAC AAD, Pod Escape **BLOQUEADO**)
 
 ## 🎯 Objetivo
