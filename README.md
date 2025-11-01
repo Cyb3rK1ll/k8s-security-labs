@@ -41,34 +41,6 @@
 |LAB 6|Breach Simulation|Day 5
 
 ---
-
-## **LAB 1: Secure AKS Cluster (Zero-Trust, RBAC AAD, Pod Escape BLOCKED)**
-
-### **Objective**
-Deploy AKS with:
-- **Azure AD RBAC** (granular access control)
-- **Private cluster + VNet isolation**
-- **Pod escape protection** (no IMDS, no hostNetwork)
-- **CIS Benchmark audit** (11 FAIL, 14 WARN → remediation plan)
-
-### **Live Results**
-| Attack | Result | Evidence |
-|--------|--------|----------|
-| **IMDS Metadata** | **BLOCKED** | No response from `168.63.129.16` |
-| **Host Network** | **BLOCKED** | Pod sees only its own `/etc/hosts` |
-| **RBAC AAD** | **ENFORCED** | `Forbidden` without cluster-admin role |
-| **CIS Score** | **92/100** | Full JSON report |
-
-### **Deploy in 5 Minutes**
-```bash
-terraform apply -auto-approve
-az role assignment create --role "Azure Kubernetes Service RBAC Cluster Admin" \
-  --assignee claudiom@deepnet.com.ar \
-  --scope $(az aks show -g k8s-lab-rg -n k8s-lab-aks --query id -o tsv)
-az aks get-credentials -g k8s-lab-rg -n k8s-lab-aks
-./attack/pod-escape.sh  # → BLOCKED
-```
----
 # About Me
 
 In the last 10 years I’ve worked mostly for MSP and MSSP companies. I am a versatile professional with +10 years of experience, specializing first and foremost in Network Security followed by a deep engagement in Security Engineering, and culminating in proficiency in DevSecOps. This unique blend of skills empowers me to comprehensively secure network systems, IT infrastructure, and software development processes.
