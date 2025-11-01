@@ -1,0 +1,9 @@
+=== POD ESCAPE ATTACK - sábado,  1 de noviembre de 2025, 01:26:15 CET ===
+POD: attacker-1761956775
+pod/attacker-1761956775 created
+pod/attacker-1761956775 condition met
+=== INTENTO IMDS AWS ===
+BLOQUEADO (IMDS)
+=== INTENTO HOSTNETWORK ===
+BLOQUEADO (hostNetwork) - solo IP del pod
+pod "attacker-1761956775" force deleted from default namespace
