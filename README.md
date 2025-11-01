@@ -34,10 +34,11 @@
 |Lab|Focus|Status|
 |-|-|-|
 |LAB 1|Secure AKS Cluster|✅ LIVE
-|LAB 2|Network Policies + Falco|Tomorrow
-|LAB 3|RBAC + JIT Access|Day 3
-|LAB 4|Runtime Security + SOAR|Day 4
-|LAB 5|Breach Simulation|Day 5
+|LAB 2|Secure EKS Cluster|✅ LIVE
+|LAB 3|Network Policies + Falco|Tomorrow
+|LAB 4|RBAC + JIT Access|Day 3
+|LAB 5|Runtime Security + SOAR|Day 4
+|LAB 6|Breach Simulation|Day 5
 
 ---
 
