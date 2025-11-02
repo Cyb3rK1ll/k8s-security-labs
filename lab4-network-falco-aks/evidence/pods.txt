@@ -1,0 +1,20 @@
+NAMESPACE     NAME                                             READY   STATUS    RESTARTS   AGE   IP          NODE                              NOMINATED NODE   READINESS GATES
+default       attacker                                         1/1     Running   0          27m   10.0.1.20   aks-default-47934127-vmss000000   <none>           <none>
+default       victim                                           1/1     Running   0          27m   10.0.1.25   aks-default-47934127-vmss000000   <none>           <none>
+falco         falco-6zkxn                                      2/2     Running   0          83m   10.0.1.6    aks-default-47934127-vmss000000   <none>           <none>
+falco         falco-falcosidekick-84c8959854-m6m5d             1/1     Running   0          48m   10.0.1.9    aks-default-47934127-vmss000000   <none>           <none>
+falco         falco-falcosidekick-84c8959854-q6d7b             1/1     Running   0          48m   10.0.1.23   aks-default-47934127-vmss000000   <none>           <none>
+kube-system   azure-cns-rhh9b                                  1/1     Running   0          84m   10.0.1.4    aks-default-47934127-vmss000000   <none>           <none>
+kube-system   azure-ip-masq-agent-shwvv                        1/1     Running   0          84m   10.0.1.4    aks-default-47934127-vmss000000   <none>           <none>
+kube-system   cloud-node-manager-2wdqk                         1/1     Running   0          84m   10.0.1.4    aks-default-47934127-vmss000000   <none>           <none>
+kube-system   coredns-7945956757-j2qkl                         1/1     Running   0          84m   10.0.1.29   aks-default-47934127-vmss000000   <none>           <none>
+kube-system   coredns-7945956757-nfk9f                         1/1     Running   0          83m   10.0.1.27   aks-default-47934127-vmss000000   <none>           <none>
+kube-system   coredns-autoscaler-65cc77f87-24nbd               1/1     Running   0          84m   10.0.1.15   aks-default-47934127-vmss000000   <none>           <none>
+kube-system   csi-azuredisk-node-q6dbn                         3/3     Running   0          84m   10.0.1.4    aks-default-47934127-vmss000000   <none>           <none>
+kube-system   csi-azurefile-node-57kzx                         3/3     Running   0          84m   10.0.1.4    aks-default-47934127-vmss000000   <none>           <none>
+kube-system   konnectivity-agent-57df7b9bd5-47b4k              1/1     Running   0          46m   10.0.1.12   aks-default-47934127-vmss000000   <none>           <none>
+kube-system   konnectivity-agent-57df7b9bd5-zck2l              1/1     Running   0          46m   10.0.1.17   aks-default-47934127-vmss000000   <none>           <none>
+kube-system   konnectivity-agent-autoscaler-6c64c6dfc9-8nkzz   1/1     Running   0          84m   10.0.1.18   aks-default-47934127-vmss000000   <none>           <none>
+kube-system   kube-proxy-xcvxq                                 1/1     Running   0          84m   10.0.1.4    aks-default-47934127-vmss000000   <none>           <none>
+kube-system   metrics-server-684b6644f5-b88rc                  2/2     Running   0          83m   10.0.1.26   aks-default-47934127-vmss000000   <none>           <none>
+kube-system   metrics-server-684b6644f5-fvzcl                  2/2     Running   0          83m   10.0.1.16   aks-default-47934127-vmss000000   <none>           <none>

@@ -1,0 +1,16 @@
+apiVersion: v1
+data:
+  falco.yaml: "- rule: Test - Any shell via sh or bash with -c\n  desc: Triggers when
+    any shell with '-c' is launched inside a container (for testing)\n  condition:
+    >\n    container\n    and evt.type = execve\n    and (proc.name = sh or proc.name
+    = bash)\n    and proc.cmdline contains \"-c\"\n  output: >\n    \U0001F525 [Falco
+    Test] Shell via sh/bash with -c (user=%user.name container=%container.id image=%container.image.repository
+    command=%proc.cmdline)\n  priority: NOTICE\n  tags: [test, shell, container]"
+immutable: false
+kind: ConfigMap
+metadata:
+  creationTimestamp: "2025-11-02T18:30:22Z"
+  name: falco-custom-rules
+  namespace: falco
+  resourceVersion: "1451"
+  uid: 85aea3e3-23a2-45fe-bc03-e014444fefab

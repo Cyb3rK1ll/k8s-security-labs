@@ -1,0 +1,24 @@
+USER-SUPPLIED VALUES:
+driver:
+  kind: module
+  loader:
+    version: 3.0.0
+extraVolumeMounts:
+- mountPath: /etc/falco/custom_rules
+  name: falco-custom-rules
+  readOnly: true
+extraVolumes:
+- configMap:
+    name: falco-custom-rules
+  name: falco-custom-rules
+falco:
+  json_include_output_property: true
+  json_output: true
+  rules_files:
+  - /etc/falco/falco_rules.yaml
+  - /etc/falco/custom_rules/falco.yaml
+falcosidekick:
+  config:
+    slack:
+      webhookurl: https://hooks.slack.com/services/XXXXXXXXXX/XXXXXXXXXX/XXXXXXXXXXXXXXXXXXX
+  enabled: true
