@@ -164,7 +164,7 @@ resource "helm_release" "falco" {
       enabled: true
       config:
         slack:
-          webhookurl: "https://hooks.slack.com/services/XXXXXXXXX/XXXXXXXXX/XXXXXXXXXXXXXXXXXXX"
+          webhookurl: "https://hooks.slack.com/services/XXXXXXXXXXX/XXXXXXXXXX/XXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
           minimumpriority: "Debug"
     extraVolumes:
       - name: falco-custom-rules
