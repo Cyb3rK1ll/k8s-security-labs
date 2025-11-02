@@ -5,34 +5,32 @@
 > **Spain | [clau.magagnotti@hotmail.com](mailto:clau.magagnotti@hotmail.com)**  
 
 # LAB 3: Kubernetes Network Policies + Falco (EKS + Slack Alerts)
-## ¿POR QUÉ FALCO?
-Falco es la solución de facto para runtime security en Kubernetes, independientemente del proveedor cloud.
-Azure y AWS ofrecen herramientas nativas (Defender for Containers, GuardDuty), pero:
+## WHY FALCO?
 
-- No tienen la granularidad de Falco (syscall-level detection)
-- No son open-source ni multi-cloud
-- No permiten reglas personalizadas tan flexibles
+Falco is the de facto solution for runtime security in Kubernetes, regardless of the cloud provider.
+Azure and AWS offer native tools (Defender for Containers, GuardDuty), but:
 
->**Falco detecta en tiempo real: shell spawn, binarios no autorizados, privilege escalation. Lo usamos porque es el estándar CNCF, funciona igual en EKS, AKS, GKE.
-En producción, se integra con Slack, SIEM, SOAR. Es más potente que las herramientas nativas para entornos regulados."**
-**"Falco es la solución de facto para runtime security en Kubernetes, independientemente del proveedor cloud.
-Azure y AWS ofrecen herramientas nativas (Defender for Containers, GuardDuty), pero:
+- They lack the granularity of Falco (syscall-level detection)
+- They are not open-source or multi-cloud
+- They don’t support such flexible custom rules
 
-No tienen la granularidad de Falco (syscall-level detection)
-No son open-source ni multi-cloud
-No permiten reglas personalizadas tan flexibles
+> Falco detects in real-time: shell spawn, unauthorized binaries, privilege escalation.
+We use it because it is the CNCF standard, and works the same in EKS, AKS, GKE.
+In production, it integrates with Slack, SIEM, SOAR. It’s more powerful than native tools for regulated environments.
 
-Falco detecta en tiempo real: shell spawn, binarios no autorizados, privilege escalation.
-Lo usamos porque es el estándar CNCF, funciona igual en EKS, AKS, GKE.
-En producción, se integra con Slack, SIEM, SOAR.
-Es más potente que las herramientas nativas para entornos regulados."**
 
-## **Objetivo del Laboratorio**
+## **Lab Objective**
 Demostrar **Zero Trust** en Kubernetes:
 - **NetworkPolicy deny-all** → Bloquea todo tráfico
 - **Falco** → Detecta shells y binarios no autorizados
 - **Slack** → Alertas en tiempo real
 - **Terraform + Helm + EKS** → 100% automatizado
+
+Demonstrate Zero Trust in Kubernetes:
+- **NetworkPolicy deny-all** → Blocks all traffic
+- **Falco → Detects shells** and unauthorized binaries
+- **Slack** → Real-time alerts
+- **Terraform + Helm + EKS** → 100% automated
 
 ---
 ## **📊 Metrics Hardening**
