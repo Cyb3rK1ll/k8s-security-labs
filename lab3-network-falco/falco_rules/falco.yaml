@@ -1,0 +1,11 @@
+- rule: Test - Any shell via sh or bash with -c
+  desc: Triggers when any shell with '-c' is launched inside a container (for testing)
+  condition: >
+    container
+    and evt.type = execve
+    and (proc.name = sh or proc.name = bash)
+    and proc.cmdline contains "-c"
+  output: >
+    🔥 [Falco Test] Shell via sh/bash with -c (user=%user.name container=%container.id image=%container.image.repository command=%proc.cmdline)
+  priority: NOTICE
+  tags: [test, shell, container]

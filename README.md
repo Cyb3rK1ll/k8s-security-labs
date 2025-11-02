@@ -10,7 +10,7 @@
 - **Cloud Security**: AKS/EKS hardening, VNet isolation, CIS benchmarks, Falco, OPA Gatekeeper
 - **IAM & Compliance**: PAM, RBAC, MFA, ISO 27001, NIST CSF, GDPR, NIS2
 - **DevSecOps**: GitLab, Jenkins, Docker, SAST, DAST, SCA, container security
-- **Threat & Risk**: Threat modeling, vulnerability management, SIEM, SOAR
+- **Threat & Risk**: Threat modeling, vulnerability management, SIEM, SOAR, incident response (IR), containment & recovery
 - **Presales & Advisory**: Solution design, technical proposals, client presentations
 
 ---
@@ -33,12 +33,12 @@
 
 |Lab|Focus|Status|
 |-|-|-|
-|LAB 1|Secure AKS Cluster|✅ LIVE
-|LAB 2|Secure EKS Cluster|✅ LIVE
-|LAB 3|Network Policies + Falco|Tomorrow
-|LAB 4|RBAC + JIT Access|Day 3
-|LAB 5|Runtime Security + SOAR|Day 4
-|LAB 6|Breach Simulation|Day 5
+|LAB 1|Secure AKS Cluster| ✅ LIVE
+|LAB 2|Secure EKS Cluster| ✅ LIVE
+|LAB 3|Network Policies + Falco| ✅ LIVE
+|LAB 4|RBAC + JIT Access|PENDING
+|LAB 5|Runtime Security + SOAR|PENDING
+|LAB 6|Breach Simulation|PENDING
 
 ---
 # About Me

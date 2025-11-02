@@ -1,0 +1,17 @@
+apiVersion: v1
+data:
+  falco_rules.local.yaml: "- rule: Test - Any shell via sh or bash with -c\n  desc:
+    Dispara cuando se lanza cualquier shell con '-c' dentro de un contenedor (para
+    pruebas)\n  condition: >\n    container\n    and evt.type = execve\n    and (proc.name
+    = sh or proc.name = bash)\n    and proc.cmdline contains \"-c\"\n  output: >\n
+    \   \U0001F525 [Falco Test] Shell via sh/bash with -c (user=%user.name container=%container.id
+    image=%container.image.repository command=%proc.cmdline)\n  priority: NOTICE\n
+    \ tags: [test, shell, container]"
+immutable: false
+kind: ConfigMap
+metadata:
+  creationTimestamp: "2025-11-02T04:29:56Z"
+  name: falco-custom-rules
+  namespace: falco
+  resourceVersion: "104350"
+  uid: dd1b2e80-2b81-4df2-91fa-6dda2181105d

@@ -1,0 +1,10 @@
+# pod-test-sh.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-shell
+spec:
+  containers:
+    - name: shell
+      image: alpine
+      command: ["sh", "-c", "sh -c 'echo vulnerable' && sleep 3600"]

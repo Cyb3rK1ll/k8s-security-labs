@@ -1,0 +1,19 @@
+apiVersion: v1
+items:
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    creationTimestamp: "2025-11-02T01:02:13Z"
+    generation: 1
+    name: deny-all
+    namespace: default
+    resourceVersion: "67799"
+    uid: 85759c81-d28f-4828-80b1-f20c6a445c6b
+  spec:
+    podSelector: {}
+    policyTypes:
+    - Ingress
+    - Egress
+kind: List
+metadata:
+  resourceVersion: ""

@@ -1,0 +1,11 @@
+NAMESPACE     NAME                                   READY   STATUS    RESTARTS        AGE     IP             NODE                                         NOMINATED NODE   READINESS GATES
+default       attacker                               1/1     Running   0               32m     10.0.101.203   ip-10-0-101-188.eu-west-1.compute.internal   <none>           <none>
+default       test-shell                             1/1     Running   1 (2m46s ago)   62m     10.0.101.248   ip-10-0-101-188.eu-west-1.compute.internal   <none>           <none>
+default       victim                                 1/1     Running   0               32m     10.0.101.24    ip-10-0-101-188.eu-west-1.compute.internal   <none>           <none>
+falco         falco-falcosidekick-8587944c8f-5chnn   1/1     Running   0               38m     10.0.101.178   ip-10-0-101-188.eu-west-1.compute.internal   <none>           <none>
+falco         falco-falcosidekick-8587944c8f-tmx5x   1/1     Running   0               38m     10.0.101.179   ip-10-0-101-188.eu-west-1.compute.internal   <none>           <none>
+falco         falco-xpxg9                            2/2     Running   0               38m     10.0.101.189   ip-10-0-101-188.eu-west-1.compute.internal   <none>           <none>
+kube-system   aws-node-fdskw                         2/2     Running   0               10h     10.0.101.188   ip-10-0-101-188.eu-west-1.compute.internal   <none>           <none>
+kube-system   coredns-67d68bcfdc-2fn9h               1/1     Running   0               5h25m   10.0.101.6     ip-10-0-101-188.eu-west-1.compute.internal   <none>           <none>
+kube-system   coredns-67d68bcfdc-tqz5k               1/1     Running   0               5h26m   10.0.101.133   ip-10-0-101-188.eu-west-1.compute.internal   <none>           <none>
+kube-system   kube-proxy-6hwvh                       1/1     Running   0               10h     10.0.101.188   ip-10-0-101-188.eu-west-1.compute.internal   <none>           <none>
