@@ -5,7 +5,7 @@
 > **Spain | [clau.magagnotti@hotmail.com](mailto:clau.magagnotti@hotmail.com)**  
 
 # LAB 3: Kubernetes Network Policies + Falco (EKS + Slack Alerts)
-##¿POR QUÉ FALCO?
+## ¿POR QUÉ FALCO?
 Falco es la solución de facto para runtime security en Kubernetes, independientemente del proveedor cloud.
 Azure y AWS ofrecen herramientas nativas (Defender for Containers, GuardDuty), pero:
 
@@ -26,7 +26,8 @@ Falco detecta en tiempo real: shell spawn, binarios no autorizados, privilege es
 Lo usamos porque es el estándar CNCF, funciona igual en EKS, AKS, GKE.
 En producción, se integra con Slack, SIEM, SOAR.
 Es más potente que las herramientas nativas para entornos regulados."**
-## **Objetivo**
+
+## **Objetivo del Laboratorio**
 Demostrar **Zero Trust** en Kubernetes:
 - **NetworkPolicy deny-all** → Bloquea todo tráfico
 - **Falco** → Detecta shells y binarios no autorizados
