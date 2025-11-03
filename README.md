@@ -36,8 +36,8 @@ ROADMAP DE LABORATORIOS
 |-|-|-|-|-|-|
 |✅|1|Secure AKS Cluster (CIS)|Azure|CIS Benchmark + Hardening|AZ-104|
 |✅|2|Secure EKS Cluster (CIS)|AWS|CIS Benchmark + Hardening|AWS Security|
-|✅|3|Network Policies + Falco|AWS EKS|Zero Trust + Runtime,Falco|
-|✅|4|Network Policies + Falco|Azure AKS|Multi-cloud Zero Trust,Falco|
+|✅|3|Network Policies + Falco|AWS EKS|Zero Trust + Runtime|Falco|
+|✅|4|Network Policies + Falco|Azure AKS|Multi-cloud Zero Trust|Falco|
 |🟠|5|OPA Gatekeeper + PSS|Azure AKS|Policy as Code|OPA|
 |🟠|6|RBAC + JIT + PAM|Azure AKS|IAM + Just-In-Time|Azure AD|
 |🟠|7|Kyverno + Image Scanning|GCP GKE|Policy Engine + Trivy|Kyverno|
