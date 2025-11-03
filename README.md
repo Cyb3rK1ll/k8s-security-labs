@@ -30,18 +30,6 @@
 
 
 ### Roadmap
-
-|Lab|Focus|Status|
-|-|-|-|
-|LAB 1|Secure AKS Cluster| ✅ LIVE
-|LAB 2|Secure EKS Cluster| ✅ LIVE
-|LAB 3|Network Policies + Falco EKS| ✅ LIVE
-|LAB 4|Network Policies + Falco AKS| ✅ LIVE
-|LAB 5|RBAC + JIT Access|PENDING
-|LAB 6|Runtime Security + SOAR|PENDING
-|LAB 7|Breach Simulation|PENDING
-
-
 ROADMAP DE LABORATORIOS
 
 |State|LAB|Tema|Cloud|Objetivo|Certificación|
