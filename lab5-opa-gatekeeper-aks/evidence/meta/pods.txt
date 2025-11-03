@@ -1,0 +1,19 @@
+NAMESPACE           NAME                                             READY   STATUS    RESTARTS   AGE     IP          NODE                              NOMINATED NODE   READINESS GATES
+gatekeeper-system   gatekeeper-audit-58d7fbf6b4-2rqgf                1/1     Running   0          39s     10.0.1.20   aks-default-28037874-vmss000000   <none>           <none>
+gatekeeper-system   gatekeeper-controller-manager-6b7564c6bf-82rdd   1/1     Running   0          79m     10.0.1.12   aks-default-28037874-vmss000000   <none>           <none>
+gatekeeper-system   gatekeeper-controller-manager-6b7564c6bf-cfd4c   1/1     Running   0          79m     10.0.1.13   aks-default-28037874-vmss000000   <none>           <none>
+gatekeeper-system   gatekeeper-controller-manager-6b7564c6bf-kn9vs   1/1     Running   0          79m     10.0.1.16   aks-default-28037874-vmss000000   <none>           <none>
+kube-system         azure-cns-jnqmm                                  1/1     Running   0          7h29m   10.0.1.4    aks-default-28037874-vmss000000   <none>           <none>
+kube-system         azure-ip-masq-agent-ntw5p                        1/1     Running   0          7h29m   10.0.1.4    aks-default-28037874-vmss000000   <none>           <none>
+kube-system         cloud-node-manager-lnf5f                         1/1     Running   0          7h29m   10.0.1.4    aks-default-28037874-vmss000000   <none>           <none>
+kube-system         coredns-7945956757-fpjgs                         1/1     Running   0          7h28m   10.0.1.15   aks-default-28037874-vmss000000   <none>           <none>
+kube-system         coredns-7945956757-x9mdp                         1/1     Running   0          7h30m   10.0.1.22   aks-default-28037874-vmss000000   <none>           <none>
+kube-system         coredns-autoscaler-65cc77f87-z5flk               1/1     Running   0          7h30m   10.0.1.8    aks-default-28037874-vmss000000   <none>           <none>
+kube-system         csi-azuredisk-node-q9tfj                         3/3     Running   0          7h29m   10.0.1.4    aks-default-28037874-vmss000000   <none>           <none>
+kube-system         csi-azurefile-node-fd9cg                         3/3     Running   0          7h29m   10.0.1.4    aks-default-28037874-vmss000000   <none>           <none>
+kube-system         konnectivity-agent-5d97b886f5-7t5kr              1/1     Running   0          7h1m    10.0.1.11   aks-default-28037874-vmss000000   <none>           <none>
+kube-system         konnectivity-agent-5d97b886f5-fplh8              1/1     Running   0          7h1m    10.0.1.28   aks-default-28037874-vmss000000   <none>           <none>
+kube-system         konnectivity-agent-autoscaler-6c64c6dfc9-ggmcg   1/1     Running   0          7h30m   10.0.1.10   aks-default-28037874-vmss000000   <none>           <none>
+kube-system         kube-proxy-fhfm6                                 1/1     Running   0          7h29m   10.0.1.4    aks-default-28037874-vmss000000   <none>           <none>
+kube-system         metrics-server-684b6644f5-lnc87                  2/2     Running   0          7h28m   10.0.1.23   aks-default-28037874-vmss000000   <none>           <none>
+kube-system         metrics-server-684b6644f5-wdbwj                  2/2     Running   0          7h28m   10.0.1.26   aks-default-28037874-vmss000000   <none>           <none>

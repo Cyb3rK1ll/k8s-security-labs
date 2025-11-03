@@ -1,5 +1,5 @@
 apiVersion: constraints.gatekeeper.sh/v1beta1
-kind: K8sPSPBaseline
+kind: K8sPSS
 metadata:
   name: pss-baseline
 spec:
@@ -9,3 +9,5 @@ spec:
         kinds: ["Pod"]
     namespaces:
       - "default"
+  parameters:
+    level: baseline

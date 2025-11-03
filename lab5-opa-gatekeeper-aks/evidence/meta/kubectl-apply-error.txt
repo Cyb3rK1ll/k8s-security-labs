@@ -1,0 +1,1 @@
+error: error parsing attack/malicious-pod.yaml: error converting YAML to JSON: yaml: line 3: mapping values are not allowed in this context

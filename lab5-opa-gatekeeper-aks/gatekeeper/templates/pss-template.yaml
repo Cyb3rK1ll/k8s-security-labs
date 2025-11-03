@@ -1,0 +1,52 @@
+apiVersion: templates.gatekeeper.sh/v1
+kind: ConstraintTemplate
+metadata:
+  name: k8spss
+spec:
+  crd:
+    spec:
+      names:
+        kind: K8sPSS
+      validation:
+        openAPIV3Schema:
+          type: object
+          properties:
+            level:
+              type: string
+              enum: ["baseline", "restricted"]
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package k8spss
+        import future.keywords.every
+
+        violation[{"msg": msg}] {
+          input.review.object.kind == "Pod"
+          level := input.parameters.level
+          not pss_compliant(input.review.object, level)
+          msg := sprintf("Pod %v violates PSS level %v", [input.review.object.metadata.name, level])
+        }
+
+        # baseline: no privilegios ni acceso al host
+        is_baseline_compliant(pod) {
+          every c in pod.spec.containers {
+            not c.securityContext.privileged
+          }
+          not pod.spec.hostNetwork
+          not pod.spec.hostPID
+          not pod.spec.hostIPC
+        }
+
+        # restricted: además requiere runAsNonRoot y sin capabilities
+        pss_compliant(pod, "restricted") {
+          is_baseline_compliant(pod)
+          every c in pod.spec.containers {
+            c.securityContext.runAsNonRoot == true
+            not c.securityContext.capabilities.add
+          }
+        }
+
+        # referencia a baseline
+        pss_compliant(pod, "baseline") {
+          is_baseline_compliant(pod)
+        }

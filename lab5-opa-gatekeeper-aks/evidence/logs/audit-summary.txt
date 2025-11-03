@@ -1,0 +1,50 @@
+=== GATEKEEPER AUDIT SUMMARY ===
+NAME                    ENFORCEMENT   VIOLATIONS
+pss-baseline            deny          0
+pss-baseline-dryrun     dryrun        6
+pss-restricted          deny          0
+pss-restricted-dryrun   dryrun        12
+
+=== DETAILED VIOLATIONS ===
+pss-baseline-dryrun
+dryrun
+dryrun
+dryrun
+dryrun
+dryrun
+dryrun
+Pod kube-proxy-fhfm6 violates PSS level baseline
+Pod csi-azurefile-node-fd9cg violates PSS level baseline
+Pod csi-azuredisk-node-q9tfj violates PSS level baseline
+Pod cloud-node-manager-lnf5f violates PSS level baseline
+Pod azure-ip-masq-agent-ntw5p violates PSS level baseline
+Pod azure-cns-jnqmm violates PSS level baseline
+-
+-
+pss-restricted-dryrun
+dryrun
+dryrun
+dryrun
+dryrun
+dryrun
+dryrun
+dryrun
+dryrun
+dryrun
+dryrun
+dryrun
+dryrun
+Pod kube-proxy-fhfm6 violates PSS level restricted
+Pod konnectivity-agent-autoscaler-6c64c6dfc9-ggmcg violates PSS level restricted
+Pod konnectivity-agent-5d97b886f5-fplh8 violates PSS level restricted
+Pod konnectivity-agent-5d97b886f5-7t5kr violates PSS level restricted
+Pod csi-azurefile-node-fd9cg violates PSS level restricted
+Pod csi-azuredisk-node-q9tfj violates PSS level restricted
+Pod coredns-autoscaler-65cc77f87-z5flk violates PSS level restricted
+Pod coredns-7945956757-x9mdp violates PSS level restricted
+Pod coredns-7945956757-fpjgs violates PSS level restricted
+Pod cloud-node-manager-lnf5f violates PSS level restricted
+Pod azure-ip-masq-agent-ntw5p violates PSS level restricted
+Pod azure-cns-jnqmm violates PSS level restricted
+-
+-

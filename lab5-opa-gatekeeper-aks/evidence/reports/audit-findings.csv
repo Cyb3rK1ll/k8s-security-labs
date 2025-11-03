@@ -1,0 +1,5 @@
+Constraint,EnforcementAction,Violations
+"pss-baseline","deny",0
+"pss-baseline-dryrun","dryrun",6
+"pss-restricted","deny",0
+"pss-restricted-dryrun","dryrun",12

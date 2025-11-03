@@ -41,7 +41,7 @@ resource "azurerm_subnet" "aks" {
   address_prefixes     = ["10.0.1.0/24"]
 }
 
-# AKS Cluster
+# AKS Cluster (FREE TIER)
 resource "azurerm_kubernetes_cluster" "aks" {
   name                = "lab5-aks-cluster"
   location            = azurerm_resource_group.rg.location
@@ -66,35 +66,82 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 }
 
-# === CONEXIÓN DIRECTA AL CLUSTER (SIN ~/.kube/config) ===
+# ESPERA ACTIVA A QUE EL CLUSTER AKS ESTÉ REALMENTE LISTO
+resource "null_resource" "wait_for_cluster" {
+  provisioner "local-exec" {
+    command = <<EOT
+      echo "Esperando a que el cluster AKS esté listo para kubectl..."
+      az aks get-credentials --resource-group ${azurerm_resource_group.rg.name} --name ${azurerm_kubernetes_cluster.aks.name} --overwrite-existing
+      for i in {1..30}; do
+        if kubectl get nodes --request-timeout=5s >/dev/null 2>&1; then
+          echo "✅ Cluster listo!"
+          exit 0
+        fi
+        echo "⏳ Cluster aún no listo... reintentando ($i/30)"
+        sleep 10
+      done
+      echo "❌ Timeout esperando al cluster AKS"
+      exit 1
+    EOT
+  }
+
+  depends_on = [azurerm_kubernetes_cluster.aks]
+}
+
+/*
+# ESPERA A QUE EL CLUSTER ESTÉ LISTO
+resource "null_resource" "wait_for_cluster" {
+  provisioner "local-exec" {
+    command = <<EOT
+      echo "Esperando cluster AKS..."
+      sleep 60
+      until kubectl get nodes --request-timeout=5s > /dev/null 2>&1; do
+        echo "Cluster no listo, reintentando..."
+        sleep 10
+      done
+      echo "Cluster listo!"
+    EOT
+  }
+
+  depends_on = [azurerm_kubernetes_cluster.aks]
+}
+*/
+
+# ACTUALIZA KUBECONFIG
+resource "null_resource" "update_kubeconfig" {
+  provisioner "local-exec" {
+    command = "az aks get-credentials --resource-group ${azurerm_resource_group.rg.name} --name ${azurerm_kubernetes_cluster.aks.name} --overwrite-existing"
+  }
+
+  depends_on = [azurerm_kubernetes_cluster.aks]
+}
+
+# CREA KUBECONFIG LOCAL
+resource "local_file" "kubeconfig" {
+  content  = azurerm_kubernetes_cluster.aks.kube_config_raw
+  filename = "${path.module}/.kube/config"
+
+  depends_on = [null_resource.update_kubeconfig]
+}
+
+# Providers (USANDO KUBECONFIG LOCAL)
 provider "kubernetes" {
-  host                   = azurerm_kubernetes_cluster.aks.kube_config.0.host
-  client_certificate     = base64decode(azurerm_kubernetes_cluster.aks.kube_config.0.client_certificate)
-  client_key             = base64decode(azurerm_kubernetes_cluster.aks.kube_config.0.client_key)
-  cluster_ca_certificate = base64decode(azurerm_kubernetes_cluster.aks.kube_config.0.cluster_ca_certificate)
+  config_path = local_file.kubeconfig.filename
 }
 
 provider "helm" {
   kubernetes {
-    host                   = azurerm_kubernetes_cluster.aks.kube_config.0.host
-    client_certificate     = base64decode(azurerm_kubernetes_cluster.aks.kube_config.0.client_certificate)
-    client_key             = base64decode(azurerm_kubernetes_cluster.aks.kube_config.0.client_key)
-    cluster_ca_certificate = base64decode(azurerm_kubernetes_cluster.aks.kube_config.0.cluster_ca_certificate)
+    config_path = local_file.kubeconfig.filename
   }
-}
-
-# === ESPERA CRÍTICA ===
-resource "time_sleep" "wait_90_seconds" {
-  depends_on = [azurerm_kubernetes_cluster.aks]
-  create_duration = "90s"
 }
 
 # OPA Gatekeeper
 resource "helm_release" "gatekeeper" {
   name       = "gatekeeper"
-  repository = "https://open-policy-agent.github.io/gatekeeper/charts"
-  chart      = "gatekeeper"
-  version    = "3.14.0"
+  #repository = "https://open-policy-agent.github.io/gatekeeper/charts"
+  #chart      = "gatekeeper"
+  chart            = "${path.module}/charts/gatekeeper"
+  #version    = "3.20.1"
   namespace  = "gatekeeper-system"
   create_namespace = true
 
@@ -103,19 +150,75 @@ resource "helm_release" "gatekeeper" {
     value = "60"
   }
 
-  depends_on = [azurerm_kubernetes_cluster.aks, time_sleep.wait_90_seconds]
+  # ESPERA A QUE LOS CRDs ESTÉN LISTOS (FUNCIONA EN 3.14)
+  set {
+    name  = "installCRDs"
+    value = "true"
+  }
+
+  depends_on = [null_resource.wait_for_cluster]
 }
 
-# PSS Baseline Constraint
-resource "kubernetes_manifest" "pss_baseline" {
-  manifest = yamldecode(file("${path.module}/gatekeeper/constraints/pss-baseline.yaml"))
+# ESPERA A QUE LOS CRDs ESTÉN LISTOS (DOBLE VERIFICACIÓN)
+resource "null_resource" "wait_for_crds" {
+  provisioner "local-exec" {
+    command = <<EOT
+      echo "Esperando CRDs base de Gatekeeper..."
+      until kubectl get crd constrainttemplates.templates.gatekeeper.sh > /dev/null 2>&1; do
+        echo "CRD ConstraintTemplate no listo, reintentando..."
+        sleep 10
+      done
+      echo "CRD ConstraintTemplate listo!"
+    EOT
+  }
 
   depends_on = [helm_release.gatekeeper]
 }
 
-# PSS Restricted Constraint
-resource "kubernetes_manifest" "pss_restricted" {
-  manifest = yamldecode(file("${path.module}/gatekeeper/constraints/pss-restricted.yaml"))
+# Aplica los ConstraintTemplates con kubectl
+resource "null_resource" "apply_constraint_templates" {
+  provisioner "local-exec" {
+    command = <<EOT
+      echo "Aplicando ConstraintTemplate PSS..."
+      kubectl apply -f ${path.module}/gatekeeper/templates/pss-template.yaml
+      echo "Esperando CRD K8sPSS..."
+      until kubectl get crd k8spss.constraints.gatekeeper.sh > /dev/null 2>&1; do
+        echo "CRD K8sPSS no listo, reintentando..."
+        sleep 10
+      done
+      echo "CRD K8sPSS listo!"
+    EOT
+  }
 
-  depends_on = [helm_release.gatekeeper]
+  depends_on = [null_resource.wait_for_crds]
 }
+
+# Aplica los Constraints (PSS)
+resource "null_resource" "apply_constraints" {
+  provisioner "local-exec" {
+    command = <<EOT
+      echo "Aplicando Constraints PSS..."
+      kubectl apply -f ${path.module}/gatekeeper/constraints/
+    EOT
+  }
+
+  depends_on = [null_resource.apply_constraint_templates]
+}
+
+
+/*
+# ConstraintTemplate para PSS
+resource "kubernetes_manifest" "constraint_template" {
+  for_each = fileset("${path.module}/gatekeeper/templates", "*.yaml")
+  manifest = yamldecode(file("${path.module}/gatekeeper/templates/${each.value}"))
+
+  depends_on = [null_resource.wait_for_crds]
+}
+
+# Constraints PSS
+resource "kubernetes_manifest" "pss_constraints" {
+  for_each = fileset("${path.module}/gatekeeper/constraints", "*.yaml")
+  manifest = yamldecode(file("${path.module}/gatekeeper/constraints/${each.value}"))
+
+  depends_on = [kubernetes_manifest.constraint_template]
+}*/

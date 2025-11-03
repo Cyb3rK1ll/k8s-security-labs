@@ -1,0 +1,4 @@
+=== ATTACK RESULTS SUMMARY ===
+hostnetwork: BLOCKED (pss-baseline pss-restricted)
+privileged: BLOCKED (pss-baseline pss-restricted)
+runasnonroot: BLOCKED (pss-restricted)

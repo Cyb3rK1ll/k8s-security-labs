@@ -1,0 +1,8 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sPSS
+metadata:
+  name: pss-baseline-dryrun
+spec:
+  enforcementAction: dryrun
+  parameters:
+    level: baseline

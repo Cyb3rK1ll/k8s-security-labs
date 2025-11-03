@@ -1,0 +1,509 @@
+{
+    "apiVersion": "v1",
+    "items": [
+        {
+            "apiVersion": "constraints.gatekeeper.sh/v1beta1",
+            "kind": "K8sPSS",
+            "metadata": {
+                "annotations": {
+                    "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"constraints.gatekeeper.sh/v1beta1\",\"kind\":\"K8sPSS\",\"metadata\":{\"annotations\":{},\"name\":\"pss-baseline\"},\"spec\":{\"match\":{\"kinds\":[{\"apiGroups\":[\"\"],\"kinds\":[\"Pod\"]}],\"namespaces\":[\"default\"]},\"parameters\":{\"level\":\"baseline\"}}}\n"
+                },
+                "creationTimestamp": "2025-11-03T17:44:28Z",
+                "generation": 1,
+                "name": "pss-baseline",
+                "resourceVersion": "139843",
+                "uid": "2262280b-c3a0-45ee-87c0-79716b24d5f0"
+            },
+            "spec": {
+                "enforcementAction": "deny",
+                "match": {
+                    "kinds": [
+                        {
+                            "apiGroups": [
+                                ""
+                            ],
+                            "kinds": [
+                                "Pod"
+                            ]
+                        }
+                    ],
+                    "namespaces": [
+                        "default"
+                    ]
+                },
+                "parameters": {
+                    "level": "baseline"
+                }
+            },
+            "status": {
+                "auditTimestamp": "2025-11-03T19:51:04Z",
+                "byPod": [
+                    {
+                        "constraintUID": "2262280b-c3a0-45ee-87c0-79716b24d5f0",
+                        "enforced": true,
+                        "enforcementPointsStatus": [
+                            {
+                                "enforcementPoint": "vap.k8s.io",
+                                "message": "K8sNativeValidation engine is missing",
+                                "observedGeneration": 1,
+                                "state": "error"
+                            }
+                        ],
+                        "id": "gatekeeper-audit-58d7fbf6b4-2rqgf",
+                        "observedGeneration": 1,
+                        "operations": [
+                            "audit",
+                            "generate",
+                            "mutation-status",
+                            "status"
+                        ]
+                    },
+                    {
+                        "constraintUID": "2262280b-c3a0-45ee-87c0-79716b24d5f0",
+                        "enforced": true,
+                        "id": "gatekeeper-controller-manager-6b7564c6bf-82rdd",
+                        "observedGeneration": 1,
+                        "operations": [
+                            "mutation-webhook",
+                            "webhook"
+                        ]
+                    },
+                    {
+                        "constraintUID": "2262280b-c3a0-45ee-87c0-79716b24d5f0",
+                        "enforced": true,
+                        "id": "gatekeeper-controller-manager-6b7564c6bf-cfd4c",
+                        "observedGeneration": 1,
+                        "operations": [
+                            "mutation-webhook",
+                            "webhook"
+                        ]
+                    },
+                    {
+                        "constraintUID": "2262280b-c3a0-45ee-87c0-79716b24d5f0",
+                        "enforced": true,
+                        "id": "gatekeeper-controller-manager-6b7564c6bf-kn9vs",
+                        "observedGeneration": 1,
+                        "operations": [
+                            "mutation-webhook",
+                            "webhook"
+                        ]
+                    }
+                ],
+                "totalViolations": 0
+            }
+        },
+        {
+            "apiVersion": "constraints.gatekeeper.sh/v1beta1",
+            "kind": "K8sPSS",
+            "metadata": {
+                "annotations": {
+                    "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"constraints.gatekeeper.sh/v1beta1\",\"kind\":\"K8sPSS\",\"metadata\":{\"annotations\":{},\"name\":\"pss-baseline-dryrun\"},\"spec\":{\"enforcementAction\":\"dryrun\",\"parameters\":{\"level\":\"baseline\"}}}\n"
+                },
+                "creationTimestamp": "2025-11-03T18:29:25Z",
+                "generation": 1,
+                "name": "pss-baseline-dryrun",
+                "resourceVersion": "139844",
+                "uid": "6496e16d-d030-4736-aa16-dbc812310aa2"
+            },
+            "spec": {
+                "enforcementAction": "dryrun",
+                "parameters": {
+                    "level": "baseline"
+                }
+            },
+            "status": {
+                "auditTimestamp": "2025-11-03T19:51:04Z",
+                "byPod": [
+                    {
+                        "constraintUID": "6496e16d-d030-4736-aa16-dbc812310aa2",
+                        "enforced": true,
+                        "enforcementPointsStatus": [
+                            {
+                                "enforcementPoint": "vap.k8s.io",
+                                "message": "K8sNativeValidation engine is missing",
+                                "observedGeneration": 1,
+                                "state": "error"
+                            }
+                        ],
+                        "id": "gatekeeper-audit-58d7fbf6b4-2rqgf",
+                        "observedGeneration": 1,
+                        "operations": [
+                            "audit",
+                            "generate",
+                            "mutation-status",
+                            "status"
+                        ]
+                    },
+                    {
+                        "constraintUID": "6496e16d-d030-4736-aa16-dbc812310aa2",
+                        "enforced": true,
+                        "id": "gatekeeper-controller-manager-6b7564c6bf-82rdd",
+                        "observedGeneration": 1,
+                        "operations": [
+                            "mutation-webhook",
+                            "webhook"
+                        ]
+                    },
+                    {
+                        "constraintUID": "6496e16d-d030-4736-aa16-dbc812310aa2",
+                        "enforced": true,
+                        "id": "gatekeeper-controller-manager-6b7564c6bf-cfd4c",
+                        "observedGeneration": 1,
+                        "operations": [
+                            "mutation-webhook",
+                            "webhook"
+                        ]
+                    },
+                    {
+                        "constraintUID": "6496e16d-d030-4736-aa16-dbc812310aa2",
+                        "enforced": true,
+                        "id": "gatekeeper-controller-manager-6b7564c6bf-kn9vs",
+                        "observedGeneration": 1,
+                        "operations": [
+                            "mutation-webhook",
+                            "webhook"
+                        ]
+                    }
+                ],
+                "totalViolations": 6,
+                "violations": [
+                    {
+                        "enforcementAction": "dryrun",
+                        "group": "",
+                        "kind": "Pod",
+                        "message": "Pod kube-proxy-fhfm6 violates PSS level baseline",
+                        "name": "kube-proxy-fhfm6",
+                        "namespace": "kube-system",
+                        "version": "v1"
+                    },
+                    {
+                        "enforcementAction": "dryrun",
+                        "group": "",
+                        "kind": "Pod",
+                        "message": "Pod csi-azurefile-node-fd9cg violates PSS level baseline",
+                        "name": "csi-azurefile-node-fd9cg",
+                        "namespace": "kube-system",
+                        "version": "v1"
+                    },
+                    {
+                        "enforcementAction": "dryrun",
+                        "group": "",
+                        "kind": "Pod",
+                        "message": "Pod csi-azuredisk-node-q9tfj violates PSS level baseline",
+                        "name": "csi-azuredisk-node-q9tfj",
+                        "namespace": "kube-system",
+                        "version": "v1"
+                    },
+                    {
+                        "enforcementAction": "dryrun",
+                        "group": "",
+                        "kind": "Pod",
+                        "message": "Pod cloud-node-manager-lnf5f violates PSS level baseline",
+                        "name": "cloud-node-manager-lnf5f",
+                        "namespace": "kube-system",
+                        "version": "v1"
+                    },
+                    {
+                        "enforcementAction": "dryrun",
+                        "group": "",
+                        "kind": "Pod",
+                        "message": "Pod azure-ip-masq-agent-ntw5p violates PSS level baseline",
+                        "name": "azure-ip-masq-agent-ntw5p",
+                        "namespace": "kube-system",
+                        "version": "v1"
+                    },
+                    {
+                        "enforcementAction": "dryrun",
+                        "group": "",
+                        "kind": "Pod",
+                        "message": "Pod azure-cns-jnqmm violates PSS level baseline",
+                        "name": "azure-cns-jnqmm",
+                        "namespace": "kube-system",
+                        "version": "v1"
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "constraints.gatekeeper.sh/v1beta1",
+            "kind": "K8sPSS",
+            "metadata": {
+                "annotations": {
+                    "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"constraints.gatekeeper.sh/v1beta1\",\"kind\":\"K8sPSS\",\"metadata\":{\"annotations\":{},\"name\":\"pss-restricted\"},\"spec\":{\"match\":{\"kinds\":[{\"apiGroups\":[\"\"],\"kinds\":[\"Pod\"]}],\"namespaces\":[\"default\"]},\"parameters\":{\"level\":\"restricted\"}}}\n"
+                },
+                "creationTimestamp": "2025-11-03T17:44:29Z",
+                "generation": 1,
+                "name": "pss-restricted",
+                "resourceVersion": "139845",
+                "uid": "d13c840f-ce64-4c50-a3d9-ffc514701a67"
+            },
+            "spec": {
+                "enforcementAction": "deny",
+                "match": {
+                    "kinds": [
+                        {
+                            "apiGroups": [
+                                ""
+                            ],
+                            "kinds": [
+                                "Pod"
+                            ]
+                        }
+                    ],
+                    "namespaces": [
+                        "default"
+                    ]
+                },
+                "parameters": {
+                    "level": "restricted"
+                }
+            },
+            "status": {
+                "auditTimestamp": "2025-11-03T19:51:04Z",
+                "byPod": [
+                    {
+                        "constraintUID": "d13c840f-ce64-4c50-a3d9-ffc514701a67",
+                        "enforced": true,
+                        "enforcementPointsStatus": [
+                            {
+                                "enforcementPoint": "vap.k8s.io",
+                                "message": "K8sNativeValidation engine is missing",
+                                "observedGeneration": 1,
+                                "state": "error"
+                            }
+                        ],
+                        "id": "gatekeeper-audit-58d7fbf6b4-2rqgf",
+                        "observedGeneration": 1,
+                        "operations": [
+                            "audit",
+                            "generate",
+                            "mutation-status",
+                            "status"
+                        ]
+                    },
+                    {
+                        "constraintUID": "d13c840f-ce64-4c50-a3d9-ffc514701a67",
+                        "enforced": true,
+                        "id": "gatekeeper-controller-manager-6b7564c6bf-82rdd",
+                        "observedGeneration": 1,
+                        "operations": [
+                            "mutation-webhook",
+                            "webhook"
+                        ]
+                    },
+                    {
+                        "constraintUID": "d13c840f-ce64-4c50-a3d9-ffc514701a67",
+                        "enforced": true,
+                        "id": "gatekeeper-controller-manager-6b7564c6bf-cfd4c",
+                        "observedGeneration": 1,
+                        "operations": [
+                            "mutation-webhook",
+                            "webhook"
+                        ]
+                    },
+                    {
+                        "constraintUID": "d13c840f-ce64-4c50-a3d9-ffc514701a67",
+                        "enforced": true,
+                        "id": "gatekeeper-controller-manager-6b7564c6bf-kn9vs",
+                        "observedGeneration": 1,
+                        "operations": [
+                            "mutation-webhook",
+                            "webhook"
+                        ]
+                    }
+                ],
+                "totalViolations": 0
+            }
+        },
+        {
+            "apiVersion": "constraints.gatekeeper.sh/v1beta1",
+            "kind": "K8sPSS",
+            "metadata": {
+                "annotations": {
+                    "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"constraints.gatekeeper.sh/v1beta1\",\"kind\":\"K8sPSS\",\"metadata\":{\"annotations\":{},\"name\":\"pss-restricted-dryrun\"},\"spec\":{\"enforcementAction\":\"dryrun\",\"parameters\":{\"level\":\"restricted\"}}}\n"
+                },
+                "creationTimestamp": "2025-11-03T18:29:25Z",
+                "generation": 1,
+                "name": "pss-restricted-dryrun",
+                "resourceVersion": "139842",
+                "uid": "23b0003c-750b-4f42-b17e-8580a10391f9"
+            },
+            "spec": {
+                "enforcementAction": "dryrun",
+                "parameters": {
+                    "level": "restricted"
+                }
+            },
+            "status": {
+                "auditTimestamp": "2025-11-03T19:51:04Z",
+                "byPod": [
+                    {
+                        "constraintUID": "23b0003c-750b-4f42-b17e-8580a10391f9",
+                        "enforced": true,
+                        "enforcementPointsStatus": [
+                            {
+                                "enforcementPoint": "vap.k8s.io",
+                                "message": "K8sNativeValidation engine is missing",
+                                "observedGeneration": 1,
+                                "state": "error"
+                            }
+                        ],
+                        "id": "gatekeeper-audit-58d7fbf6b4-2rqgf",
+                        "observedGeneration": 1,
+                        "operations": [
+                            "audit",
+                            "generate",
+                            "mutation-status",
+                            "status"
+                        ]
+                    },
+                    {
+                        "constraintUID": "23b0003c-750b-4f42-b17e-8580a10391f9",
+                        "enforced": true,
+                        "id": "gatekeeper-controller-manager-6b7564c6bf-82rdd",
+                        "observedGeneration": 1,
+                        "operations": [
+                            "mutation-webhook",
+                            "webhook"
+                        ]
+                    },
+                    {
+                        "constraintUID": "23b0003c-750b-4f42-b17e-8580a10391f9",
+                        "enforced": true,
+                        "id": "gatekeeper-controller-manager-6b7564c6bf-cfd4c",
+                        "observedGeneration": 1,
+                        "operations": [
+                            "mutation-webhook",
+                            "webhook"
+                        ]
+                    },
+                    {
+                        "constraintUID": "23b0003c-750b-4f42-b17e-8580a10391f9",
+                        "enforced": true,
+                        "id": "gatekeeper-controller-manager-6b7564c6bf-kn9vs",
+                        "observedGeneration": 1,
+                        "operations": [
+                            "mutation-webhook",
+                            "webhook"
+                        ]
+                    }
+                ],
+                "totalViolations": 12,
+                "violations": [
+                    {
+                        "enforcementAction": "dryrun",
+                        "group": "",
+                        "kind": "Pod",
+                        "message": "Pod kube-proxy-fhfm6 violates PSS level restricted",
+                        "name": "kube-proxy-fhfm6",
+                        "namespace": "kube-system",
+                        "version": "v1"
+                    },
+                    {
+                        "enforcementAction": "dryrun",
+                        "group": "",
+                        "kind": "Pod",
+                        "message": "Pod konnectivity-agent-autoscaler-6c64c6dfc9-ggmcg violates PSS level restricted",
+                        "name": "konnectivity-agent-autoscaler-6c64c6dfc9-ggmcg",
+                        "namespace": "kube-system",
+                        "version": "v1"
+                    },
+                    {
+                        "enforcementAction": "dryrun",
+                        "group": "",
+                        "kind": "Pod",
+                        "message": "Pod konnectivity-agent-5d97b886f5-fplh8 violates PSS level restricted",
+                        "name": "konnectivity-agent-5d97b886f5-fplh8",
+                        "namespace": "kube-system",
+                        "version": "v1"
+                    },
+                    {
+                        "enforcementAction": "dryrun",
+                        "group": "",
+                        "kind": "Pod",
+                        "message": "Pod konnectivity-agent-5d97b886f5-7t5kr violates PSS level restricted",
+                        "name": "konnectivity-agent-5d97b886f5-7t5kr",
+                        "namespace": "kube-system",
+                        "version": "v1"
+                    },
+                    {
+                        "enforcementAction": "dryrun",
+                        "group": "",
+                        "kind": "Pod",
+                        "message": "Pod csi-azurefile-node-fd9cg violates PSS level restricted",
+                        "name": "csi-azurefile-node-fd9cg",
+                        "namespace": "kube-system",
+                        "version": "v1"
+                    },
+                    {
+                        "enforcementAction": "dryrun",
+                        "group": "",
+                        "kind": "Pod",
+                        "message": "Pod csi-azuredisk-node-q9tfj violates PSS level restricted",
+                        "name": "csi-azuredisk-node-q9tfj",
+                        "namespace": "kube-system",
+                        "version": "v1"
+                    },
+                    {
+                        "enforcementAction": "dryrun",
+                        "group": "",
+                        "kind": "Pod",
+                        "message": "Pod coredns-autoscaler-65cc77f87-z5flk violates PSS level restricted",
+                        "name": "coredns-autoscaler-65cc77f87-z5flk",
+                        "namespace": "kube-system",
+                        "version": "v1"
+                    },
+                    {
+                        "enforcementAction": "dryrun",
+                        "group": "",
+                        "kind": "Pod",
+                        "message": "Pod coredns-7945956757-x9mdp violates PSS level restricted",
+                        "name": "coredns-7945956757-x9mdp",
+                        "namespace": "kube-system",
+                        "version": "v1"
+                    },
+                    {
+                        "enforcementAction": "dryrun",
+                        "group": "",
+                        "kind": "Pod",
+                        "message": "Pod coredns-7945956757-fpjgs violates PSS level restricted",
+                        "name": "coredns-7945956757-fpjgs",
+                        "namespace": "kube-system",
+                        "version": "v1"
+                    },
+                    {
+                        "enforcementAction": "dryrun",
+                        "group": "",
+                        "kind": "Pod",
+                        "message": "Pod cloud-node-manager-lnf5f violates PSS level restricted",
+                        "name": "cloud-node-manager-lnf5f",
+                        "namespace": "kube-system",
+                        "version": "v1"
+                    },
+                    {
+                        "enforcementAction": "dryrun",
+                        "group": "",
+                        "kind": "Pod",
+                        "message": "Pod azure-ip-masq-agent-ntw5p violates PSS level restricted",
+                        "name": "azure-ip-masq-agent-ntw5p",
+                        "namespace": "kube-system",
+                        "version": "v1"
+                    },
+                    {
+                        "enforcementAction": "dryrun",
+                        "group": "",
+                        "kind": "Pod",
+                        "message": "Pod azure-cns-jnqmm violates PSS level restricted",
+                        "name": "azure-cns-jnqmm",
+                        "namespace": "kube-system",
+                        "version": "v1"
+                    }
+                ]
+            }
+        }
+    ],
+    "kind": "List",
+    "metadata": {
+        "resourceVersion": ""
+    }
+}

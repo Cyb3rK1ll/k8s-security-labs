@@ -1,0 +1,5 @@
+USER-SUPPLIED VALUES:
+audit:
+  intervalSeconds: 60
+installCRDs: true
+validatingWebhookFailurePolicy: Fail
