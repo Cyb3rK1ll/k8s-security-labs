@@ -64,7 +64,7 @@ terraform apply -auto-approve
 
 ```
 ---
-## 📊 Métricas de Hardening
+## 📊 Hardening metrics
 
 |Feature| Status| Prueba|
 |-|-|-|
@@ -77,7 +77,7 @@ terraform apply -auto-approve
 
 ---
 
-## Evidencia (100% recolectada en /evidence)
+## Evidence (100% collected in /evidence)
 
 |Archivo | Descripción |
 |-|-|
