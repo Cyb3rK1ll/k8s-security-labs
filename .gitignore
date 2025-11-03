@@ -3,3 +3,5 @@
 .terraform.lock.hcl
 terraform.tfstate
 terraform.tfstate.backup
+lab5-opa-gatekeeper-aks/.terraform.lock.hcl
+lab5-opa-gatekeeper-aks/terraform.tfstate
