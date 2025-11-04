@@ -1,0 +1,15 @@
+## Current User
+subscription: c4237e82-f48c-4c0b-ab95-28c9018eee31
+user: developer@deepnet.com.ar
+
+## Who am I (Kubernetes)
+ATTRIBUTE    VALUE
+Username     developer@deepnet.com.ar
+Groups       [62361920-c479-44a8-aa5e-58597163818d system:authenticated]
+Extra: oid   [e4809eb7-d728-42ef-a54f-f3951634c02c]
+
+## Can I do basic actions?
+yes
+yes
+yes
+yes

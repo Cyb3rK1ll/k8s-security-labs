@@ -1,6 +1,6 @@
 # Kubernetes Security Labs – Claudio Magagnotti
 
-> **Cybersecurity Architect | 12+ Years in Cloud & DevSecOps**  
+> **Cybersecurity Architect | 12+ Years in Cybersecurity Architect, Cloud Security & DevSecOps**  
 > **Azure AKS | AWS EKS | Zero Trust | CISSP (2025) | CKA | AZ-500**  
 > **Spain | [clau.magagnotti@hotmail.com](mailto:clau.magagnotti@hotmail.com)**  
 
@@ -38,7 +38,7 @@ ROADMAP DE LABORATORIOS
 |✅|2|Secure EKS Cluster (CIS)|AWS|CIS Benchmark + Hardening|AWS Security|
 |✅|3|Network Policies + Falco|AWS EKS|Zero Trust + Runtime|Falco|
 |✅|4|Network Policies + Falco|Azure AKS|Multi-cloud Zero Trust|Falco|
-|🟠|5|OPA Gatekeeper + PSS|Azure AKS|Policy as Code|OPA|
+|✅|5|OPA Gatekeeper + PSS|Azure AKS|Policy as Code|OPA|
 |🟠|6|RBAC + JIT + PAM|Azure AKS|IAM + Just-In-Time|Azure AD|
 |🟠|7|Kyverno + Image Scanning|GCP GKE|Policy Engine + Trivy|Kyverno|
 |🟠|8|ArgoCD + GitOps Security|GCP GKE|Secure GitOps|ArgoCD|
