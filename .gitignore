@@ -1,7 +1,14 @@
-.terraform/
-.kube/
-.terraform.lock.hcl
-terraform.tfstate
-terraform.tfstate.backup
-lab5-opa-gatekeeper-aks/.terraform.lock.hcl
-lab5-opa-gatekeeper-aks/terraform.tfstate
+# Terraform
+**/.terraform/
+**/.terraform.lock.hcl
+**/terraform.tfstate
+**/terraform.tfstate.backup
+
+# Kubeconfig
+**/.kube/
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+*.tmp
+*.bak

@@ -38,7 +38,7 @@ resource "random_password" "developer_password" {
   override_special = "!@#$%^&*()-_=+[]{}"
 }
 
-# AKS Cluster (FREE TIER)
+# AKS Cluster
 resource "azurerm_kubernetes_cluster" "aks" {
   name                = "lab6-aks-cluster"
   location            = azurerm_resource_group.rg.location
@@ -63,10 +63,10 @@ resource "azurerm_kubernetes_cluster" "aks" {
 }
 
 # ====================================================
-# 🔐 Azure RBAC assignments for AKS Zero Trust Access
+#  Azure RBAC assignments for AKS Zero Trust Access
 # ====================================================
 
-# Get current Azure AD user (Terraform executor)
+# Get current Azure AD user 
 data "azuread_user" "current" {
   user_principal_name = "claudiom@deepnet.com.ar"
 }
@@ -89,7 +89,7 @@ resource "azurerm_role_assignment" "aks_cluster_admin_group" {
   depends_on = [azurerm_kubernetes_cluster.aks]
 }
 
-# ACTUALIZA KUBECONFIG
+# UPDATE KUBECONFIG
 resource "null_resource" "update_kubeconfig" {
   provisioner "local-exec" {
     command = "az aks get-credentials --resource-group ${azurerm_resource_group.rg.name} --name ${azurerm_kubernetes_cluster.aks.name} --overwrite-existing"
@@ -98,7 +98,7 @@ resource "null_resource" "update_kubeconfig" {
   depends_on = [azurerm_kubernetes_cluster.aks]
 }
 
-# CREA KUBECONFIG LOCAL
+# CREATE LOCAL KUBECONFIG 
 resource "local_file" "kubeconfig" {
   content  = azurerm_kubernetes_cluster.aks.kube_config_raw
   filename = "${path.module}/.kube/config"
@@ -131,17 +131,17 @@ resource "azuread_group" "developer" {
 }
 
 # ====================================================
-# 👥 Add members to Azure AD Groups
+# Add members to Azure AD Groups
 # ====================================================
 
 # Get users from Entra ID (replace with real users in your tenant)
 data "azuread_user" "admin_user" {
-  user_principal_name = "claudiom@deepnet.com.ar"
+  user_principal_name = "claudiom@testinglab.com"
 }
 
 # Create demo developer user in Entra ID (for lab)
 resource "azuread_user" "developer_user" {
-  user_principal_name   = "developer@deepnet.com.ar"
+  user_principal_name   = "developer@testinglab.com"
   display_name          = "AKS Developer"
   mail_nickname         = "developer"
   password              = random_password.developer_password.result
@@ -174,7 +174,7 @@ resource "azuread_group_member" "developer_member" {
   member_object_id = azuread_user.developer_user.id
 }
 
-# PIM Eligible Assignment (JIT - CONFIGURADO EN PORTAL)
+# PIM Eligible Assignment (JIT - CONFIGURED IN PORTAL)
 # Note: PIM eligibility is configured manually in the Azure Portal due to Terraform limitations.
 
 data "azurerm_role_definition" "aks_admin" {
