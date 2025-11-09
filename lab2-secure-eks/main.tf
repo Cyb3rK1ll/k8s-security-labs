@@ -37,17 +37,17 @@ module "vpc" {
 # EKS Cluster
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "~> 19.0"
+  version = "~> 21.0"
 
-  cluster_name    = "eks-lab-cluster"
-  cluster_version = "1.30"
+  name    = "eks-lab-cluster"
+  version = "1.30"
 
   vpc_id     = module.vpc.vpc_id
   subnet_ids = module.vpc.private_subnets
 
   # Public access only for Lab
-  cluster_endpoint_public_access = true
-  cluster_endpoint_private_access = true
+  endpoint_public_access  = true
+  endpoint_private_access = true
 
   # IRSA
   enable_irsa = true
