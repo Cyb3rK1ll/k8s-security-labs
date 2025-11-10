@@ -13,7 +13,7 @@ provider "aws" {
   profile = "k8s-labs"
 }
 
-# VPC privada (no internet)
+# VPC privada (no internet)----
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "~> 5.0"
