@@ -1,4 +1,4 @@
-# Kubernetes Security Labs – Claudio Magagnotti
+# Security Labs – Claudio Magagnotti
 
 > **Cybersecurity Architect | 12+ Years in Cybersecurity Architect, Cloud Security & DevSecOps**  
 > **Azure AKS | AWS EKS | Zero Trust | CISSP (2025) | CKA | AZ-500**  
@@ -22,10 +22,9 @@
 ---
 
 ### **Why These Labs?**
-- **Interview-proof**: Deploy secure AKS/EKS in 5 minutes
-- AKS audit + CIS fix plan
+- **Interview-proof**: Deploy secure security labs in 5 minutes
 - **Production-hardened**: Terraform, RBAC, VNet isolation, CIS benchmarks
-- **Multi-cloud**: Azure AKS + AWS EKS
+- **Multi-cloud**: Azure + AWS + GCP
 - **Real attacks**: Pod escape, privilege escalation, lateral movement
 
 
@@ -40,9 +39,9 @@ ROADMAP DE LABORATORIOS
 |✅|4|Network Policies + Falco|Azure AKS|Multi-cloud Zero Trust|Falco|
 |✅|5|OPA Gatekeeper + PSS|Azure AKS|Policy as Code|OPA|
 |✅|6|RBAC + JIT + PAM|Azure AKS|IAM + Just-In-Time|Azure AD|
-|✅|7|DevSecOps DefectDojo in EC2|Multi-cloud|SAST/DAST/SCA|GitLab|
-|🟠|7|DevSecOps IaC Pipeline example|Multi-cloud|SAST/DAST/SCA|GitLab|
-|🟠|8|DevSecOps App Pipeline example|Multi-cloud|SAST/DAST/SCA|GitLab|
+|🟠|7|DevSecOps IaC Pipeline + Defectdojo example|Multi-cloud|SAST/DAST/SCA|GitLab|
+|🟠|8|DevSecOps App Pipeline + Defectdojo example|Multi-cloud|SAST/DAST/SCA|GitLab|
+|✅|9|Threat Intelligence Automation|Multi-cloud|CTI Ingestion + Sharing|OpenCTI + MISP|
 |🟠|9|Kyverno + Image Scanning|GCP GKE|Policy Engine + Trivy|Kyverno|
 |🟠|10|ArgoCD + GitOps Security|GCP GKE|Secure GitOps|ArgoCD|
 |🟠|11|API Security + WAF|Azure|API Gateway + WAF|API Management|

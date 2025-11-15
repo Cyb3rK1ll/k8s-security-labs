@@ -3,6 +3,8 @@
 **/.terraform.lock.hcl
 **/terraform.tfstate
 **/terraform.tfstate.backup
+**/ssh-key.pem
+**/*.pem
 
 # Kubeconfig
 **/.kube/
