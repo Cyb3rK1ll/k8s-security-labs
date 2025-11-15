@@ -39,14 +39,14 @@ ROADMAP DE LABORATORIOS
 |✅|4|Network Policies + Falco|Azure AKS|Multi-cloud Zero Trust|Falco|
 |✅|5|OPA Gatekeeper + PSS|Azure AKS|Policy as Code|OPA|
 |✅|6|RBAC + JIT + PAM|Azure AKS|IAM + Just-In-Time|Azure AD|
-|🟠|7|DevSecOps IaC Pipeline + Defectdojo example|Multi-cloud|SAST/DAST/SCA|GitLab|
-|🟠|8|DevSecOps App Pipeline + Defectdojo example|Multi-cloud|SAST/DAST/SCA|GitLab|
-|✅|9|Threat Intelligence Automation|Multi-cloud|CTI Ingestion + Sharing|OpenCTI + MISP|
-|🟠|9|Kyverno + Image Scanning|GCP GKE|Policy Engine + Trivy|Kyverno|
-|🟠|10|ArgoCD + GitOps Security|GCP GKE|Secure GitOps|ArgoCD|
-|🟠|11|API Security + WAF|Azure|API Gateway + WAF|API Management|
-|🟠|12|SIEM + SOAR|AWS|GuardDuty + Sentinel|Security Hub|
-|🟠|13|Zero Trust Architecture|Multi-cloud|Full stack ZT|NIST CSF|
+|✅|7|Threat Intelligence Automation|Multi-cloud|CTI Ingestion + Sharing|OpenCTI + MISP|
+|🟠|8|DevSecOps IaC Pipeline + Defectdojo example|Multi-cloud|SAST/DAST/SCA|GitLab|
+|🟠|9|DevSecOps App Pipeline + Defectdojo example|Multi-cloud|SAST/DAST/SCA|GitLab|
+|🟠|10|Kyverno + Image Scanning|GCP GKE|Policy Engine + Trivy|Kyverno|
+|🟠|11|ArgoCD + GitOps Security|GCP GKE|Secure GitOps|ArgoCD|
+|🟠|12|API Security + WAF|Azure|API Gateway + WAF|API Management|
+|🟠|13|SIEM + SOAR|AWS|GuardDuty + Sentinel|Security Hub|
+|🟠|14|Zero Trust Architecture|Multi-cloud|Full stack ZT|NIST CSF|
 ---
 # About Me
 
