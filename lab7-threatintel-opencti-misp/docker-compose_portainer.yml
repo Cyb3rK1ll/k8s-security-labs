@@ -1,0 +1,429 @@
+services:
+  redis:
+    image: redis:8.2.1
+    restart: always
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.19.2
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    environment:
+      # Comment-out the line below for a cluster of multiple nodes
+      - discovery.type=single-node
+      # Uncomment the line below below for a cluster of multiple nodes
+      # - cluster.name=docker-cluster
+      - xpack.ml.enabled=false
+      - xpack.security.enabled=false
+      - thread_pool.search.queue_size=5000
+      - logger.org.elasticsearch.discovery="ERROR"
+      - "ES_JAVA_OPTS=-Xms${ELASTIC_MEMORY_SIZE} -Xmx${ELASTIC_MEMORY_SIZE}"
+    restart: always
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s http://elasticsearch:9200/_cluster/health?wait_for_status=yellow >/dev/null || exit 1"]
+      interval: 20s
+      timeout: 3s
+      retries: 50
+  minio:
+    image: minio/minio:RELEASE.2025-06-13T11-33-47Z
+    volumes:
+      - s3data:/data
+    ports:
+      - "127.0.0.1:9100:9000"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    command: server /data
+    restart: always
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+  rabbitmq:
+    image: rabbitmq:4.1-management
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+      - RABBITMQ_NODENAME=rabbit01@localhost
+    volumes:
+      - type: bind
+        source: ./rabbitmq.conf
+        target: /etc/rabbitmq/rabbitmq.conf 
+      - amqpdata:/var/lib/rabbitmq
+    restart: always
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 30s
+      retries: 3
+  # Run MISP locally so OpenCTI can ingest threat intel.
+  misp:
+    image: local/misp-bootstrap:latest
+    hostname: misp
+    environment:
+      # Keep core MISP settings externalized so we can reuse the same compose in other envs.
+      - MISP_baseurl=${MISP_baseurl}
+      - MISP_org=${MISP_org}
+      - MISP_orgdomain=${MISP_orgdomain}
+      - MISP_admin_email=${MISP_admin_email}
+      - MISP_admin_pw=${MISP_admin_pw}
+      - MISP_authkey=${MISP_authkey}
+      - MISP_enable_background_jobs=true
+      - MISP_verify_cert=false
+      - POSTFIX_RELAY_HOST=${MISP_SMTP_RELAY_HOST}
+      - POSTFIX_RELAY_PORT=${MISP_SMTP_RELAY_PORT}
+      - MISP_DB_PASSWORD=${MISP_DB_PASSWORD}
+      - MISP_ADMIN_AUTHKEY=${MISP_ADMIN_AUTHKEY}
+    volumes:
+      # Persist uploads, cache and the embedded MariaDB instance.
+      - misp-files:/var/www/MISP/app/files
+      - misp-tmp:/var/www/MISP/app/tmp
+      - misp-db:/var/lib/mysql
+    ports:
+      # Expose HTTP/HTTPS only on loopback for local administration.
+      - "127.0.0.1:8081:80"
+      - "127.0.0.1:8443:443"
+    restart: always
+    healthcheck:
+      # Simple HTTPS check to ensure the UI/API is up before connectors start.
+      test: ["CMD", "curl", "-k", "https://misp/users/login"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+  opencti:
+    image: opencti/platform:6.8.6
+    environment:
+      - NODE_OPTIONS=--max-old-space-size=8096
+      - APP__PORT=8080
+      - APP__BASE_URL=${OPENCTI_BASE_URL}
+      - APP__ADMIN__EMAIL=${OPENCTI_ADMIN_EMAIL}
+      - APP__ADMIN__PASSWORD=${OPENCTI_ADMIN_PASSWORD}
+      - APP__ADMIN__TOKEN=${OPENCTI_ADMIN_TOKEN}
+      - APP__APP_LOGS__LOGS_LEVEL=error
+      - REDIS__HOSTNAME=redis
+      - REDIS__PORT=6379
+      - ELASTICSEARCH__URL=http://elasticsearch:9200
+      - ELASTICSEARCH__NUMBER_OF_REPLICAS=0
+      - MINIO__ENDPOINT=minio
+      - MINIO__PORT=9000
+      - MINIO__USE_SSL=false
+      - MINIO__ACCESS_KEY=${MINIO_ROOT_USER}
+      - MINIO__SECRET_KEY=${MINIO_ROOT_PASSWORD}
+      - RABBITMQ__HOSTNAME=rabbitmq
+      - RABBITMQ__PORT=5672
+      - RABBITMQ__PORT_MANAGEMENT=15672
+      - RABBITMQ__MANAGEMENT_SSL=false
+      - RABBITMQ__USERNAME=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ__PASSWORD=${RABBITMQ_DEFAULT_PASS}
+      - SMTP__HOSTNAME=${SMTP_HOSTNAME}
+      - SMTP__PORT=25
+      - PROVIDERS__LOCAL__STRATEGY=LocalStrategy
+      - APP__HEALTH_ACCESS_KEY=${OPENCTI_HEALTHCHECK_ACCESS_KEY}
+      - XTM__OPENBAS_URL=${XTM__OPENBAS_URL}
+      - XTM__OPENBAS_TOKEN=${XTM__OPENBAS_TOKEN}
+      - XTM__OPENBAS_REJECT_UNAUTHORIZED=false
+      - XTM__OPENBAS_DISABLE_DISPLAY=false
+    ports:
+      - "127.0.0.1:8080:8080"
+    depends_on:
+      redis:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    restart: always
+    healthcheck:
+      test:  ["CMD", "wget", "-qO-", "http://opencti:8080/health?health_access_key=${OPENCTI_HEALTHCHECK_ACCESS_KEY}"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+  worker:
+    image: opencti/worker:6.8.6
+    environment:
+      - OPENCTI_URL=http://opencti:8080
+      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
+      - WORKER_LOG_LEVEL=info
+    depends_on:
+      opencti:
+        condition: service_healthy
+    deploy:
+      mode: replicated
+      replicas: 3
+    restart: always
+  connector-export-file-stix:
+    image: opencti/connector-export-file-stix:6.8.6
+    environment:
+      - OPENCTI_URL=http://opencti:8080
+      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
+      - CONNECTOR_ID=${CONNECTOR_EXPORT_FILE_STIX_ID} # Valid UUIDv4
+      - CONNECTOR_TYPE=INTERNAL_EXPORT_FILE
+      - CONNECTOR_NAME=ExportFileStix2
+      - CONNECTOR_SCOPE=application/json
+      - CONNECTOR_LOG_LEVEL=info
+    restart: always
+    depends_on:
+      opencti:
+        condition: service_healthy
+  connector-export-file-csv:
+    image: opencti/connector-export-file-csv:6.8.6
+    environment:
+      - OPENCTI_URL=http://opencti:8080
+      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
+      - CONNECTOR_ID=${CONNECTOR_EXPORT_FILE_CSV_ID} # Valid UUIDv4
+      - CONNECTOR_TYPE=INTERNAL_EXPORT_FILE
+      - CONNECTOR_NAME=ExportFileCsv
+      - CONNECTOR_SCOPE=text/csv
+      - CONNECTOR_LOG_LEVEL=info
+    restart: always
+    depends_on:
+      opencti:
+        condition: service_healthy
+  connector-export-file-txt:
+    image: opencti/connector-export-file-txt:6.8.6
+    environment:
+      - OPENCTI_URL=http://opencti:8080
+      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
+      - CONNECTOR_ID=${CONNECTOR_EXPORT_FILE_TXT_ID} # Valid UUIDv4
+      - CONNECTOR_TYPE=INTERNAL_EXPORT_FILE
+      - CONNECTOR_NAME=ExportFileTxt
+      - CONNECTOR_SCOPE=text/plain
+      - CONNECTOR_LOG_LEVEL=info
+    restart: always
+    depends_on:
+      opencti:
+        condition: service_healthy
+  connector-import-file-stix:
+    image: opencti/connector-import-file-stix:6.8.6
+    environment:
+      - OPENCTI_URL=http://opencti:8080
+      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
+      - CONNECTOR_ID=${CONNECTOR_IMPORT_FILE_STIX_ID} # Valid UUIDv4
+      - CONNECTOR_TYPE=INTERNAL_IMPORT_FILE
+      - CONNECTOR_NAME=ImportFileStix
+      - CONNECTOR_VALIDATE_BEFORE_IMPORT=true # Validate any bundle before import
+      - CONNECTOR_SCOPE=application/json,text/xml
+      - CONNECTOR_AUTO=true # Enable/disable auto-import of file
+      - CONNECTOR_LOG_LEVEL=info
+    restart: always
+    depends_on:
+      opencti:
+        condition: service_healthy
+  connector-import-document:
+    image: opencti/connector-import-document:6.8.6
+    environment:
+      - OPENCTI_URL=http://opencti:8080
+      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
+      - CONNECTOR_ID=${CONNECTOR_IMPORT_DOCUMENT_ID} # Valid UUIDv4
+      - CONNECTOR_TYPE=INTERNAL_IMPORT_FILE
+      - CONNECTOR_NAME=ImportDocument
+      - CONNECTOR_VALIDATE_BEFORE_IMPORT=true # Validate any bundle before import
+      - CONNECTOR_SCOPE=application/pdf,text/plain,text/html
+      - CONNECTOR_AUTO=true # Enable/disable auto-import of file
+      - CONNECTOR_ONLY_CONTEXTUAL=false # Only extract data related to an entity (a report, a threat actor, etc.)
+      - CONNECTOR_CONFIDENCE_LEVEL=15 # From 0 (Unknown) to 100 (Fully trusted)
+      - CONNECTOR_LOG_LEVEL=info
+      - IMPORT_DOCUMENT_CREATE_INDICATOR=true
+    restart: always
+    depends_on:
+      opencti:
+        condition: service_healthy
+  connector-analysis:
+    image: opencti/connector-import-document:6.8.6
+    environment:
+      - OPENCTI_URL=http://opencti:8080
+      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
+      - CONNECTOR_ID=${CONNECTOR_ANALYSIS_ID} # Valid UUIDv4
+      - CONNECTOR_TYPE=INTERNAL_ANALYSIS
+      - CONNECTOR_NAME=ImportDocumentAnalysis
+      - CONNECTOR_VALIDATE_BEFORE_IMPORT=false # Validate any bundle before import
+      - CONNECTOR_SCOPE=application/pdf,text/plain,text/html
+      - CONNECTOR_AUTO=true # Enable/disable auto-import of file
+      - CONNECTOR_ONLY_CONTEXTUAL=false # Only extract data related to an entity (a report, a threat actor, etc.)
+      - CONNECTOR_CONFIDENCE_LEVEL=15 # From 0 (Unknown) to 100 (Fully trusted)
+      - CONNECTOR_LOG_LEVEL=info
+    restart: always
+    depends_on:
+      opencti:
+        condition: service_healthy
+  connector-mitre:
+    image: opencti/connector-mitre:6.8.6
+    environment:
+      - OPENCTI_URL=http://opencti:8080
+      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
+      - CONNECTOR_ID=${CONNECTOR_MITRE_ID}
+      - "CONNECTOR_NAME=MITRE Datasets"
+      - CONNECTOR_SCOPE=tool,report,malware,identity,campaign,intrusion-set,attack-pattern,course-of-action,x-mitre-data-source,x-mitre-data-component,x-mitre-matrix,x-mitre-tactic,x-mitre-collection
+      - CONNECTOR_RUN_AND_TERMINATE=false
+      - CONNECTOR_LOG_LEVEL=error
+      - MITRE_REMOVE_STATEMENT_MARKING=true
+      - MITRE_INTERVAL=7 # In days
+    volumes:
+      - /etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt:ro
+    restart: always
+  connector-opencti:
+    image: opencti/connector-opencti:6.8.6
+    environment:
+      - OPENCTI_URL=http://opencti:8080
+      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
+      - CONNECTOR_ID=${CONNECTOR_OPENCTI_ID}
+      - "CONNECTOR_NAME=OpenCTI Datasets"
+      - CONNECTOR_SCOPE=marking-definition,identity,location
+      - CONNECTOR_CONFIDENCE_LEVEL=100
+      - CONNECTOR_UPDATE_EXISTING_DATA=true
+      - CONNECTOR_RUN_AND_TERMINATE=false
+      - CONNECTOR_LOG_LEVEL=error
+      - CONFIG_SECTORS_FILE_URL=https://raw.githubusercontent.com/OpenCTI-Platform/datasets/master/data/sectors.json
+      - CONFIG_GEOGRAPHY_FILE_URL=https://raw.githubusercontent.com/OpenCTI-Platform/datasets/master/data/geography.json
+      - CONFIG_COMPANIES_FILE_URL=https://raw.githubusercontent.com/OpenCTI-Platform/datasets/master/data/companies.json
+      - CONFIG_REMOVE_CREATOR=false
+      - CONFIG_INTERVAL=7 # In days
+    volumes:
+      - /etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt:ro
+    restart: always
+  # Connector that pulls data from the new MISP instance into OpenCTI.
+  connector-misp:
+    image: opencti/connector-misp:6.8.6
+    environment:
+      - OPENCTI_URL=http://opencti:8080
+      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
+      - CONNECTOR_ID=${CONNECTOR_MISP_ID}
+      - CONNECTOR_NAME=MISP
+      - CONNECTOR_SCOPE=threat-report,report,indicator,ipv4-addr,domain-name,url,file
+      - CONNECTOR_CONFIDENCE_LEVEL=80
+      - CONNECTOR_LOG_LEVEL=info
+      - CONNECTOR_RUN_AND_TERMINATE=false
+      - CONNECTOR_UPDATE_EXISTING_DATA=true
+      - MISP_URL=https://misp
+      - MISP_KEY=${MISP_authkey}
+      - MISP_SSL_VERIFY=false
+      - MISP_TAGS=${MISP_IMPORT_TAGS}
+      - MISP_IMPORT_FROM_DATE=${MISP_IMPORT_FROM_DATE}
+      - MISP_IMPORT_ONLY_PUBLISHED=${MISP_IMPORT_ONLY_PUBLISHED}
+      - MISP_IMPORT_TO_IDS_NO_SCORE=${MISP_IMPORT_TO_IDS_NO_SCORE}
+      - MISP_IMPORT_TO_OPENCTI=true
+      - MISP_CREATE_REPORTS=true
+      - MISP_CREATE_OBSERVABLES=true
+      - MISP_CREATE_INDICATORS=true
+      - MISP_ENABLE_EVENT_TAGS_IMPORT=true
+      - CONNECTOR_DURATION_PERIOD=${CONNECTOR_MISP_DURATION_PERIOD}
+    depends_on:
+      opencti:
+        condition: service_healthy
+      misp:
+        condition: service_healthy
+    restart: always
+  connector-alienvault:
+    image: opencti/connector-alienvault:6.8.6
+    environment:
+      - OPENCTI_URL=http://opencti:8080
+      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
+      - CONNECTOR_ID=${CONNECTOR_ALIENVAULT_ID}
+      - CONNECTOR_NAME=AlienVault
+      - CONNECTOR_SCOPE=alienvault
+      - CONNECTOR_LOG_LEVEL=error
+      - CONNECTOR_DURATION_PERIOD=PT30M # In ISO8601 Format starting with "P" for Period ex: "PT30M" = Period time of 30 minutes
+      - ALIENVAULT_BASE_URL=https://otx.alienvault.com
+      - ALIENVAULT_API_KEY=${ALIENVAULT_API_KEY}
+      - ALIENVAULT_TLP=White
+      - ALIENVAULT_CREATE_OBSERVABLES=true
+      - ALIENVAULT_CREATE_INDICATORS=true
+      - ALIENVAULT_PULSE_START_TIMESTAMP=2025-09020T00:00:00                  # BEWARE! Could be a lot of pulses!
+      - ALIENVAULT_REPORT_TYPE=threat-report
+      - ALIENVAULT_REPORT_STATUS=New
+      - ALIENVAULT_GUESS_MALWARE=false                                        # Use tags to guess malware.
+      - ALIENVAULT_GUESS_CVE=false                                            # Use tags to guess CVE.
+      - ALIENVAULT_EXCLUDED_PULSE_INDICATOR_TYPES=FileHash-MD5,FileHash-SHA1  # Excluded Pulse indicator types.
+      - ALIENVAULT_ENABLE_RELATIONSHIPS=true                                  # Enable/Disable relationship creation between SDOs.
+      - ALIENVAULT_ENABLE_ATTACK_PATTERNS_INDICATES=false                     # Enable/Disable "indicates" relationships between indicators and attack patterns
+      - ALIENVAULT_INTERVAL_SEC=1800
+      - ALIENVAULT_DEFAULT_X_OPENCTI_SCORE=50
+      - ALIENVAULT_X_OPENCTI_SCORE_IP=60
+      - ALIENVAULT_X_OPENCTI_SCORE_DOMAIN=70
+      - ALIENVAULT_X_OPENCTI_SCORE_HOSTNAME=75
+      - ALIENVAULT_X_OPENCTI_SCORE_EMAIL=70
+      - ALIENVAULT_X_OPENCTI_SCORE_FILE=85
+      - ALIENVAULT_X_OPENCTI_SCORE_URL=80
+      - ALIENVAULT_X_OPENCTI_SCORE_MUTEX=60
+      - ALIENVAULT_X_OPENCTI_SCORE_CRYPTOCURRENCY_WALLET=80
+      - REQUESTS_CA_BUNDLE=${RESQUESTS_CA_BUNDLE}
+    volumes:
+      - /etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt:ro   # SSL Chain errors prevention
+      - /etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/cert.pem:ro
+    restart: always
+  connector-ransomware:
+    image: opencti/connector-ransomwarelive:6.8.6
+    environment:
+      # Connector's definition parameters:
+      - CONNECTOR_NAME=RansomwareLive Connector
+      - CONNECTOR_SCOPE=identity,attack-pattern,course-of-action,intrusion-set,malware,tool,report
+      # Connector's generic execution parameters:
+      - OPENCTI_URL=http://opencti:8080
+      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN} #generate user token
+      - CONNECTOR_ID=${CONNECTOR_RANSOMWARELIVE_ID} #Valid UUIDv4 tokem
+      - CONNECTOR_CONFIDENCE_LEVEL=100 # From 0 (Unknown) to 100 (Fully trusted).
+      - CONNECTOR_LOG_LEVEL=info # Log level: debug, info, warn, error
+      - CONNECTOR_UPDATE_EXISTING_DATA=false
+      - CONNECTOR_PULL_HISTORY=false # If true, the connector will pull the history of the data. But it is not recommended to set it to true as there will a large influx of data.
+      - CONNECTOR_HISTORY_START_YEAR=2024 # Data only goes back till 2020
+      - CONNECTOR_RUN_EVERY=10m # 10 minutes will be the ideal time
+      # Connector's custom execution parameters:
+    volumes:
+      - /etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt:ro   # SSL Chain errors prevention
+      - /etc/ssl/certs/ca-certificates.crt:/usr/local/lib/python3.12/site-packages/certifi/cacert.pem:ro
+    restart: always
+  connector-cisa-known-exploited-vulnerabilities:
+    image: opencti/connector-cisa-known-exploited-vulnerabilities:6.8.6
+    environment:
+      - OPENCTI_URL=http://opencti:8080
+      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
+      - CONNECTOR_ID=${CONNECTOR_CISA_ID}
+      - "CONNECTOR_NAME=CISA Known Exploited Vulnerabilities"
+      - CONNECTOR_SCOPE=cisa
+      - CONNECTOR_RUN_AND_TERMINATE=false
+      - CONNECTOR_LOG_LEVEL=error
+      - CONNECTOR_DURATION_PERIOD=P2D
+      - CISA_CATALOG_URL=https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json
+      - CISA_CREATE_INFRASTRUCTURES=false
+      - CISA_TLP=TLP:CLEAR
+    volumes:
+      - /etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt:ro
+      - /etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/cert.pem:ro
+    restart: always
+  connector-shodan-internetdb:
+    image: opencti/connector-shodan-internetdb:rolling
+    environment:
+      - OPENCTI_URL=http://opencti:8080
+      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
+      - CONNECTOR_ID=${CONNECTOR_SHODAN_ID}
+      - CONNECTOR_NAME=Shodan InternetDB
+      - CONNECTOR_SCOPE=IPv4-Addr
+      #- CONNECTOR_AUTO=true
+      - CONNECTOR_LOG_LEVEL=error
+      - SHODAN_MAX_TLP=TLP:CLEAR
+      - SHODAN_SSL_VERIFY=true
+    restart: always
+volumes:
+  esdata:
+  s3data:
+  redisdata:
+  amqpdata:
+  misp-files: # Retain evidence files uploaded to MISP.
+  misp-tmp: # Preserve background-job cache so workers survive restarts.
+  misp-db: # Persist the embedded MariaDB database backing MISP.
