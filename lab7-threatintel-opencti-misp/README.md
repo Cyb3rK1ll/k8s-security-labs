@@ -208,15 +208,21 @@ Operating them together lets me prove expertise across: secure containerization,
 
 | Screenshot | Description |
 | --- | --- |
-| ![Screenshot of Terraform provisioning output](evidence/image.png) | Terraform provisioning + Docker installation logs validating the end-to-end automation. |
-| ![Screenshot of Portainer/stack inventory](evidence/image%20copy.png) | Portainer view showing the running stack and health of the containers. |
-| ![Screenshot of OpenCTI ingestion dashboard](evidence/image%20copy%202.png) | OpenCTI “Data → Ingestion → Monitoring” screen with connectors reporting ACTIVE status. |
-| ![Screenshot of MISP Add Event form](evidence/image%20copy%203.png) | MISP “Add Event” form used for the manual seeding workflow (Distribution/Threat Level/Analysis). |
+| ![Screenshot of Terraform provisioning output](evidence/image.png) | "Portainer view" showing the running stack and health of the containers. |
+| ![Screenshot of Portainer/stack inventory](evidence/image%20copy.png) | OpenCTI Dashboard |
+| ![Screenshot of OpenCTI ingestion dashboard](evidence/image%20copy%202.png) | OpenCTI “Data → Ingestion → MISP Connector” screen with connectors reporting ACTIVE status. |
 | ![Screenshot of OpenCTI connector details](evidence/image%20copy%204.png) | Detail of a connector card (status, last run, manager deployment). |
 | ![Screenshot of MISP feeds configuration](evidence/image%20copy%205.png) | MISP “Sync Actions → List Feeds” page showing how CIRCL OSINT feed is enabled/tagged. |
-| ![Screenshot of HAProxy validation output](evidence/image%20copy%206.png) | HAProxy bootstrap script validating config, showing TLS certificate creation. |
-| ![Screenshot of Docker build logs](evidence/image%20copy%207.png) | `docker compose build misp` output proving the custom `local/misp-bootstrap` image creation. |
-| ![Screenshot of connector logs tail](evidence/image%20copy%208.png) | `docker logs ti-connector-misp-1` excerpt confirming imports and next scheduled run. |
-| ![Screenshot of OpenCTI entities list](evidence/image%20copy%209.png) | OpenCTI Entities/Indicators view with data sourced from MISP (`Created by = MISP`). |
-| ![Screenshot of MISP event list with TLP tags](evidence/image%20copy%2010.png) | MISP “List Events” page demonstrating published events carrying the `TLP:CLEAR` tag. |
+| ![Screenshot of HAProxy validation output](evidence/image%20copy%206.png) | MISP "TLP:CLEAR" Tag configured. |
+| ![Screenshot of Docker build logs](evidence/image%20copy%207.png) | MISP Feeds with Tag "TLP:CLEAR" assigned. |
+| ![Screenshot of connector logs tail](evidence/image%20copy%208.png) | MISP "testing event" manually added for seeding workflow (Distribution/Threat Level/Analysis). |
+| ![Screenshot of OpenCTI entities list](evidence/image%20copy%209.png) | OpenCTI showing manual event "Testing event" ingested. |
+| ![Screenshot of MISP event list with TLP tags](evidence/image%20copy%2010.png) | Domain Attribute from "Testing event". |
 ---
+wdawdawaw
+
+awdawdawaw
+dawdawdawd
+awdawdaw
+dwadwadawd
+wadwa
