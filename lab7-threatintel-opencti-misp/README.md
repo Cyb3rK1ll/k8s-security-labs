@@ -219,10 +219,3 @@ Operating them together lets me prove expertise across: secure containerization,
 | ![Screenshot of OpenCTI entities list](evidence/image%20copy%209.png) | OpenCTI showing manual event "Testing event" ingested. |
 | ![Screenshot of MISP event list with TLP tags](evidence/image%20copy%2010.png) | Domain Attribute from "Testing event". |
 ---
-wdawdawaw
-
-awdawdawaw
-dawdawdawd
-awdawdaw
-dwadwadawd
-wadwa
