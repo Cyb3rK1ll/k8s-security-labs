@@ -1,0 +1,5 @@
+project_name        = "lab9-iac-secops"
+aws_region          = "eu-west-1"
+gitlab_project_path = "testing-labs/lab9-devsecops-eks"
+gitlab_ref          = "main"
+domain_name         = "threatvision.claumagagnotti.com"

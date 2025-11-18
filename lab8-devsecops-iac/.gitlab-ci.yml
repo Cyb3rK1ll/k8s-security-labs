@@ -1,0 +1,646 @@
+stages:
+  - plan-code        # OWASP DSOMM: Plan & Code
+  - build            # Build (preparar artefactos/planes)
+  - test             # Test (opcional si separas validaciones)
+  - release          # Release (gates previos a prod)
+  - deploy           # Deploy (aplicación de cambios)
+  - operate-monitor  # Operate & Monitor (post-deploy/reporting)
+  - notify           # Comunicación del resultado
+  - destroy          # Tear down
+
+variables:
+  TF_IN_AUTOMATION: "true"
+  AWS_REGION: "eu-west-1"
+
+##################################
+# --- 01- VALIDATE: corre terraform init/validate para detectar errores básicos ---
+##################################
+terraform_validate:
+  image:
+    name: hashicorp/terraform:latest
+    entrypoint: ["/bin/sh", "-c"]
+  stage: plan-code
+  id_tokens:
+    AWS_OIDC_TOKEN:
+      aud: https://gitlab.com
+  before_script:
+    - apk add --no-cache curl unzip jq aws-cli
+    - echo "🔑 Asumiendo rol OIDC AWS (validate)"
+    - |
+      aws sts assume-role-with-web-identity \
+        --role-arn arn:aws:iam::419030942547:role/gitlab-eks-lab9-role \
+        --role-session-name gitlab-validate-session \
+        --web-identity-token "$AWS_OIDC_TOKEN" > creds.json
+    - export AWS_ACCESS_KEY_ID=$(jq -r '.Credentials.AccessKeyId' creds.json)
+    - export AWS_SECRET_ACCESS_KEY=$(jq -r '.Credentials.SecretAccessKey' creds.json)
+    - export AWS_SESSION_TOKEN=$(jq -r '.Credentials.SessionToken' creds.json)
+    - unset AWS_WEB_IDENTITY_TOKEN_FILE AWS_ROLE_ARN AWS_PROFILE
+  script:
+    - terraform init
+    - terraform validate
+  when: manual
+  allow_failure: false
+  rules:
+    - when: manual
+
+##################################
+# --- 02- SECURITY: escaneos IaC (Checkov) y secretos (Gitleaks/TruffleHog) ---
+##################################
+checkov_scan:
+  stage: plan-code
+  allow_failure: true
+  image:
+    name: bridgecrew/checkov:latest
+    entrypoint:
+      - "/usr/bin/env"
+      - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+  script:
+    - echo "🔍 Ejecutando Checkov para análisis de seguridad IaC"
+    - checkov -d . --download-external-modules true --soft-fail-on HIGH -o json > checkov_report.json
+  artifacts:
+    when: always
+    paths:
+      - checkov_report.json
+  rules:
+    - when: manual
+  when: manual
+
+git_secrets:
+  stage: plan-code
+  image: alpine:3.20
+  allow_failure: true
+  rules:
+    - when: manual
+  when: manual
+  script:
+    - apk add --no-cache curl python3 py3-pip jq git tar
+
+    # ✅ Instalar Gitleaks moderno
+    - export GITLEAKS_VERSION=$(curl -s https://api.github.com/repos/gitleaks/gitleaks/releases/latest | jq -r .tag_name)
+    - GITLEAKS_VERSION_CLEAN=$(echo "$GITLEAKS_VERSION" | sed 's/^v//')
+    - echo "⬇️ Instalando Gitleaks $GITLEAKS_VERSION"
+    - curl -sSL "https://github.com/gitleaks/gitleaks/releases/download/${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION_CLEAN}_linux_x64.tar.gz" -o gitleaks.tar.gz
+    - tar -xzf gitleaks.tar.gz && mv gitleaks /usr/local/bin/gitleaks && chmod +x /usr/local/bin/gitleaks
+
+    # ✅ Instalar TruffleHog moderno (binario)
+    - echo "⬇️ Instalando TruffleHog v3 (binario)"
+    - export TRUFFLEHOG_VERSION=$(curl -s https://api.github.com/repos/trufflesecurity/trufflehog/releases/latest | jq -r .tag_name)
+    - echo 'Versión encontrada:' $TRUFFLEHOG_VERSION
+    - curl -sSL "https://github.com/trufflesecurity/trufflehog/releases/download/${TRUFFLEHOG_VERSION}/trufflehog_${TRUFFLEHOG_VERSION#v}_linux_amd64.tar.gz" -o trufflehog.tar.gz
+    - tar -xzf trufflehog.tar.gz
+    - mv trufflehog /usr/local/bin/trufflehog
+    - chmod +x /usr/local/bin/trufflehog
+    - trufflehog --version
+
+    - echo "🔐 Escaneando secretos en archivos actuales y commits"
+    - gitleaks detect --no-banner --redact --exit-code 0 --config=./secrets/.gitleaks.toml -f json -r gitleaks_report.json --source . || true
+    - trufflehog filesystem . \
+      --json \
+      --no-verification \
+      --fail \
+      --include-detectors=AWS,GitHubToken,Generic \
+      --entropy=false \
+      > trufflehog_report.json || true
+
+    - echo "✅ Archivos generados:"
+    - ls -lh *report.json || echo "⚠️ No se generaron reportes"
+
+  artifacts:
+    when: always
+    paths:
+      - gitleaks_report.json
+      - trufflehog_report.jsonsync
+
+
+#############################################################################
+# --- 04- TERRAFORM PLAN (INFRA): genera y guarda el plan del stack principal ---
+#############################################################################
+terraform_plan_infra:
+  image:
+    name: hashicorp/terraform:latest
+    entrypoint: ["/bin/sh", "-c"]
+  stage: build
+  variables:
+    TF_VAR_deploy_ingress: "true"
+  id_tokens:
+    AWS_OIDC_TOKEN:
+      aud: https://gitlab.com
+  before_script:
+    - apk add --no-cache curl unzip jq aws-cli
+    - echo "🔑 Asumiendo rol OIDC AWS"
+    - |
+      aws sts assume-role-with-web-identity \
+        --role-arn arn:aws:iam::419030942547:role/gitlab-eks-lab9-role \
+        --role-session-name gitlab-session \
+        --web-identity-token "$AWS_OIDC_TOKEN" > creds.json
+    - export AWS_ACCESS_KEY_ID=$(jq -r '.Credentials.AccessKeyId' creds.json)
+    - export AWS_SECRET_ACCESS_KEY=$(jq -r '.Credentials.SecretAccessKey' creds.json)
+    - export AWS_SESSION_TOKEN=$(jq -r '.Credentials.SessionToken' creds.json)
+    - unset AWS_WEB_IDENTITY_TOKEN_FILE AWS_ROLE_ARN AWS_PROFILE
+  script:
+    - terraform init
+    - terraform plan -out=tfplan
+  artifacts:
+    paths:
+      - tfplan
+  rules:
+    - when: manual
+  when: manual
+
+
+##################################
+# --- DEPLOY (APPLY INFRA): job manual que aplica tfplan del stack principal ---
+##################################
+terraform_apply_infra:
+  stage: deploy
+  image:
+    name: hashicorp/terraform:latest
+    entrypoint: ["/bin/sh", "-c"]
+  variables:
+    TF_VAR_deploy_ingress: "true"
+  id_tokens:
+    AWS_OIDC_TOKEN:
+      aud: https://gitlab.com
+  before_script:
+    - apk add --no-cache curl unzip jq aws-cli
+    - echo "🔑 Asumiendo rol OIDC AWS"
+    - |
+      aws sts assume-role-with-web-identity \
+        --role-arn arn:aws:iam::419030942547:role/gitlab-eks-lab9-role \
+        --role-session-name gitlab-session \
+        --web-identity-token "$AWS_OIDC_TOKEN" > creds.json
+    - export AWS_ACCESS_KEY_ID=$(jq -r '.Credentials.AccessKeyId' creds.json)
+    - export AWS_SECRET_ACCESS_KEY=$(jq -r '.Credentials.SecretAccessKey' creds.json)
+    - export AWS_SESSION_TOKEN=$(jq -r '.Credentials.SessionToken' creds.json)
+  script:
+    - terraform init
+    - terraform apply -auto-approve
+  when: manual
+  allow_failure: true
+  rules:
+    - when: manual
+
+
+############################################################################
+# --- 04b- TERRAFORM PLAN (INGRESS): plan dedicado para Traefik/cert-manager ---
+############################################################################
+terraform_plan_ingress:
+  image:
+    name: hashicorp/terraform:latest
+    entrypoint: ["/bin/sh", "-c"]
+  stage: build
+  needs:
+    - job: terraform_plan_infra
+  variables:
+    TF_VAR_deploy_ingress: "true"
+  id_tokens:
+    AWS_OIDC_TOKEN:
+      aud: https://gitlab.com
+  before_script:
+    - apk add --no-cache curl unzip jq aws-cli
+    - echo "🔑 Asumiendo rol OIDC AWS"
+    - |
+      aws sts assume-role-with-web-identity \
+        --role-arn arn:aws:iam::419030942547:role/gitlab-eks-lab9-role \
+        --role-session-name gitlab-session \
+        --web-identity-token "$AWS_OIDC_TOKEN" > creds.json
+    - export AWS_ACCESS_KEY_ID=$(jq -r '.Credentials.AccessKeyId' creds.json)
+    - export AWS_SECRET_ACCESS_KEY=$(jq -r '.Credentials.SecretAccessKey' creds.json)
+    - export AWS_SESSION_TOKEN=$(jq -r '.Credentials.SessionToken' creds.json)
+    - unset AWS_WEB_IDENTITY_TOKEN_FILE AWS_ROLE_ARN AWS_PROFILE
+    - cd terraform-ingress
+  script:
+    - terraform init
+    - terraform plan -out=tfplan-ingress
+  artifacts:
+    paths:
+      - terraform-ingress/tfplan-ingress
+  rules:
+    - when: manual
+  when: manual
+
+
+##################################
+# --- DEPLOY (APPLY INGRESS): job manual que aplica el plan del stack de ingress ---
+##################################
+terraform_apply_ingress:
+  stage: deploy
+  image:
+    name: hashicorp/terraform:latest
+    entrypoint: ["/bin/sh", "-c"]
+  needs:
+    - job: terraform_apply_infra
+  variables:
+    TF_VAR_deploy_ingress: "true"
+  id_tokens:
+    AWS_OIDC_TOKEN:
+      aud: https://gitlab.com
+  before_script:
+    - apk add --no-cache curl unzip jq aws-cli
+    - echo "🔑 Asumiendo rol OIDC AWS"
+    - |
+      aws sts assume-role-with-web-identity \
+        --role-arn arn:aws:iam::419030942547:role/gitlab-eks-lab9-role \
+        --role-session-name gitlab-session \
+        --web-identity-token "$AWS_OIDC_TOKEN" > creds.json
+    - export AWS_ACCESS_KEY_ID=$(jq -r '.Credentials.AccessKeyId' creds.json)
+    - export AWS_SECRET_ACCESS_KEY=$(jq -r '.Credentials.SecretAccessKey' creds.json)
+    - export AWS_SESSION_TOKEN=$(jq -r '.Credentials.SessionToken' creds.json)
+    - unset AWS_WEB_IDENTITY_TOKEN_FILE AWS_ROLE_ARN AWS_PROFILE
+    - cd terraform-ingress
+  script:
+    - terraform init
+    - terraform apply -auto-approve
+  when: manual
+  allow_failure: true
+  rules:
+    - when: manual
+
+##################################
+# --- DEPLOY DEFECTDOJO: aplica el plan del stack DefectDojo ---------------
+##################################
+terraform_apply_defectdojo:
+  stage: deploy
+  image:
+    name: hashicorp/terraform:latest
+    entrypoint: ["/bin/sh", "-c"]
+  needs:
+    - job: terraform_apply_ingress
+  id_tokens:
+    AWS_OIDC_TOKEN:
+      aud: https://gitlab.com
+  before_script:
+    - apk add --no-cache curl unzip jq aws-cli
+    - echo "🔑 Asumiendo rol OIDC AWS"
+    - |
+      aws sts assume-role-with-web-identity \
+        --role-arn arn:aws:iam::419030942547:role/gitlab-eks-lab9-role \
+        --role-session-name gitlab-session \
+        --web-identity-token "$AWS_OIDC_TOKEN" > creds.json
+    - export AWS_ACCESS_KEY_ID=$(jq -r '.Credentials.AccessKeyId' creds.json)
+    - export AWS_SECRET_ACCESS_KEY=$(jq -r '.Credentials.SecretAccessKey' creds.json)
+    - export AWS_SESSION_TOKEN=$(jq -r '.Credentials.SessionToken' creds.json)
+    - unset AWS_WEB_IDENTITY_TOKEN_FILE AWS_ROLE_ARN AWS_PROFILE
+    - cd terraform-defectdojo
+  script:
+    - terraform init
+    - terraform apply -auto-approve
+  when: manual
+  allow_failure: true
+  rules:
+    - when: manual
+
+
+##############################################################################
+# --- 05- POST-DEPLOY: ejecuta Prowler para auditar AWS tras el despliegue
+##############################################################################
+prowler_audit:
+  stage: operate-monitor
+  image:
+    name: python:3.9-slim
+    entrypoint: [""]
+  id_tokens:
+    AWS_OIDC_TOKEN:
+      aud: https://gitlab.com
+  before_script:
+    - pip install prowler
+    - echo "$AWS_OIDC_TOKEN" > $AWS_WEB_IDENTITY_TOKEN_FILE
+    - echo "✅ Autenticado mediante OIDC"
+  script:
+    - echo "🚨 Ejecutando auditoría Prowler..."
+    - prowler aws --compliance aws_foundational_security_best_practices_aws --output-formats json-asff --output-filename prowler_report.json --region eu-west-1 || true
+    # Normalizar el archivo para DefectDojo
+    - |
+      if [ -f "output/prowler_report.json.asff.json" ]; then
+        echo "🧩 Convirtiendo reporte ASFF a formato compatible con DefectDojo..."
+        python3 scripts/normalize_prowler_report.py \
+          output/prowler_report.json.asff.json \
+          prowler_report.json
+        echo "✅ Validando formato JSON..."
+        python3 -c "import json; json.load(open('prowler_report.json')); print('✅ JSON válido')"
+      else
+        echo "⚠️ No se encontró el reporte ASFF principal"
+      fi
+  artifacts:
+    when: always
+    paths:
+      - output/
+      - prowler_report.json
+    expire_in: 1 week
+  allow_failure: true
+  rules:
+    - when: manual
+
+
+###########################################################################
+# --- DEFECTDOJO: sube reportes de seguridad al engagement configurado -----
+###########################################################################
+upload_to_defectdojo:
+  image: curlimages/curl
+  stage: operate-monitor
+  variables:
+    DD_CURL_INSECURE: "true"
+  # Garantiza que se ejecute después de los escaneos para consumir sus artifacts
+  needs:
+    - job: checkov_scan
+      artifacts: true
+    - job: prowler_audit
+      artifacts: true
+    - job: git_secrets
+      artifacts: true
+  when: manual
+  before_script:
+    - |
+      echo "📦 Seleccionando engagement para DefectDojo..."
+      if [ "$CI_COMMIT_BRANCH" != "main" ]; then
+        echo "⚠️ No es la rama main, se omite el envío a DefectDojo."
+        exit 0
+      fi
+  script:
+    - |
+      echo "🔍 Archivos disponibles antes del upload:"
+      find . -type f -name "*.json" || echo "⚠️ No se encontraron reportes JSON"
+
+      if [ -z "$DEFECTDOJO_URL" ] || [ -z "$DEFECTDOJO_TOKEN" ] || [ -z "$DEFECTDOJO_ENGAGEMENT_ID" ]; then
+        echo "⚠️ Variables de DefectDojo incompletas, se omite el upload."
+        exit 0
+      fi
+
+      echo "🚀 Iniciando carga de reportes a DefectDojo (Engagement ID: $DEFECTDOJO_ENGAGEMENT_ID)"
+
+      CURL_OPTS=""
+      if [ "${DD_CURL_INSECURE:-false}" = "true" ]; then
+        echo "⚠️ TLS verification deshabilitada para curl (DD_CURL_INSECURE=true)"
+        CURL_OPTS="-k"
+      fi
+
+      # Probing conectividad a DefectDojo (útil para TLS/proxy/DNS)
+      echo "🌐 Probing API: $DEFECTDOJO_URL/api/v2/system_settings/"
+      curl $CURL_OPTS -sS -o /dev/null -w "HTTP %{http_code}\n" \
+        -H "Authorization: Token $DEFECTDOJO_TOKEN" \
+        "$DEFECTDOJO_URL/api/v2/system_settings/" || true
+
+      CK_CODE=""
+      GL_CODE=""
+      PR_CODE=""
+      TH_CODE=""
+
+      upload_scan () {
+        local FILE=$1
+        local TYPE=$2
+        local VAR=$3
+        if [ -f "$FILE" ]; then
+          echo "📤 Subiendo $TYPE ($FILE)..."
+          echo "   ↳ Tamaño: $(stat -c%s "$FILE" 2>/dev/null || stat -f%z "$FILE") bytes"
+          echo "   ↳ Primeras líneas del JSON:"
+          head -c 400 "$FILE" 2>/dev/null | tr -d '\n' | sed 's/"/\\"/g' | sed 's/^/      /'; echo
+
+          # Llamada al API mostrando el cuerpo de respuesta para diagnosticar errores (HTTP 400, etc.)
+          RESP=$(curl $CURL_OPTS -s -X POST "$DEFECTDOJO_URL/api/v2/import-scan/" \
+            -H "Authorization: Token $DEFECTDOJO_TOKEN" \
+            -F "scan_type=$TYPE" \
+            -F "file=@$FILE;type=application/json" \
+            -F "engagement=$DEFECTDOJO_ENGAGEMENT_ID" \
+            -F "active=true" -F "verified=true" \
+            -w "HTTPSTATUS:%{http_code}")
+          CODE=${RESP##*HTTPSTATUS:}
+          BODY=${RESP%HTTPSTATUS:*}
+
+          if [ "$CODE" = "201" ]; then
+            echo "✅ $TYPE subido correctamente"
+          else
+            echo "❌ Error ($CODE) al subir $TYPE"
+            echo "   ↳ Respuesta del servidor:"
+            echo "$BODY"
+          fi
+          eval ${VAR}="$CODE"
+        else
+          echo "⚠️ No se encontró $FILE, se omite $TYPE"
+          eval ${VAR}="404"
+        fi
+      }
+
+      upload_scan "checkov_report.json" "Checkov Scan" CK_CODE
+      # Intento 1: Prowler normalizado (objeto con {Findings: []}) con el parser OSS
+      upload_scan "prowler_report.json" "AWS Security Hub Scan" PR_CODE
+      # Fallback 1: nombre alternativo del parser en algunas versiones
+      if [ "$PR_CODE" != "201" ]; then
+        echo "↩️ Reintentando Prowler con scan_type alternativo..."
+        upload_scan "prowler_report.json" "AWS Security Hub" PR_CODE
+      fi
+      # Fallback 2: subir el ASFF crudo con el parser estándar si sigue sin funcionar
+      if [ "$PR_CODE" != "201" ] && [ -f "output/prowler_report.json.asff.json" ]; then
+        echo "↩️ Reintentando con ASFF crudo de Prowler..."
+        upload_scan "output/prowler_report.json.asff.json" "AWS Security Hub Scan" PR_CODE
+      fi
+      upload_scan "gitleaks_report.json" "Gitleaks Scan" GL_CODE
+      upload_scan "trufflehog_report.json" "TruffleHog Scan" TH_CODE
+
+      echo "🏁 Finalizado el envío de reportes a DefectDojo."
+      # Guardar resumen para Slack (si está disponible)
+      jq -n \
+        --arg ck_code "$CK_CODE" \
+        --arg gl_code "$GL_CODE" \
+        --arg pr_code "$PR_CODE" \
+        --arg th_code "$TH_CODE" \
+        '{checkov:$ck_code, gitleaks:$gl_code, prowler:$pr_code, trufflehog:$th_code}' > dd_upload_status.json
+  artifacts:
+    when: always
+    paths:
+      - dd_upload_status.json
+  allow_failure: false
+  rules:
+    - when: manual
+
+
+###################################################################################
+# --- SLACK: envía resumen del pipeline/hallazgos al canal configurado -------------
+##################################################################################
+slack_notify:
+  stage: notify
+  image: alpine:3.20
+  needs:
+    - job: checkov_scan
+      artifacts: true
+    - job: git_secrets
+      artifacts: true
+    - job: prowler_audit
+      artifacts: true
+  variables:
+    # Optional: set to <!here>, <!channel> or a user/group mention
+    SLACK_ALERT_TAG: ""
+    # When to include alert tag: always | problems-only | never
+    SLACK_ALERT_MODE: "problems-only"
+  script:
+    - apk add --no-cache curl jq
+    - |
+      if [ -z "$SLACK_WEBHOOK_URL" ]; then
+        echo "⚠️ SLACK_WEBHOOK_URL no definido; se omite notificación."
+        exit 0
+      fi
+      STATUS_ICON="✅"
+      COLOR="#2eb886"
+      case "$CI_JOB_STATUS" in
+        failed|canceled)
+          STATUS_ICON="❌"; COLOR="#e01e5a";;
+        manual|skipped)
+          STATUS_ICON="⏸️"; COLOR="#e3b341";;
+      esac
+
+      # Defaults if files are missing
+      CHECKOV_TOTAL=0; CHECKOV_BY_SEV='{}'
+      GITLEAKS_TOTAL=0
+      TRUFFLEHOG_TOTAL=0
+      PROWLER_TOTAL=0; PROWLER_BY_SEV='{}'
+
+      if [ -f checkov_report.json ]; then
+        CHECKOV_TOTAL=$(jq '.results.failed_checks | length' checkov_report.json 2>/dev/null || echo 0)
+        CHECKOV_BY_SEV=$(jq -r '[.results.failed_checks[].severity] | group_by(.) | map({(.[0]//"UNKNOWN"): length}) | add // {}' checkov_report.json 2>/dev/null || echo '{}')
+      fi
+
+      if [ -f gitleaks_report.json ]; then
+        GITLEAKS_TOTAL=$(jq 'length' gitleaks_report.json 2>/dev/null || echo 0)
+      fi
+
+      if [ -f trufflehog_report.json ]; then
+        TRUFFLEHOG_TOTAL=$(jq -s 'length' trufflehog_report.json 2>/dev/null || jq 'length' trufflehog_report.json 2>/dev/null || echo 0)
+      fi
+
+      if [ -f prowler_report.json ]; then
+        PROWLER_TOTAL=$(jq '.Findings | length' prowler_report.json 2>/dev/null || echo 0)
+        PROWLER_BY_SEV=$(jq -r '.Findings | map(.Severity.Label // "UNKNOWN") | group_by(.) | map({(.[0]): length}) | add // {}' prowler_report.json 2>/dev/null || echo '{}')
+      fi
+
+      # Escalate color if we found blocking issues (secrets or failed IaC checks)
+      if [ "$GITLEAKS_TOTAL" -gt 0 ] || [ "$TRUFFLEHOG_TOTAL" -gt 0 ] || [ "$CHECKOV_TOTAL" -gt 0 ]; then
+        STATUS_ICON="❗"; COLOR="#e01e5a"
+      fi
+
+      # Compose fields with pretty severity summaries
+      CHECKOV_FIELDS=$(jq -n --arg total "$CHECKOV_TOTAL" --argjson sev "$CHECKOV_BY_SEV" '{total:$total|tonumber, severity:$sev}')
+      PROWLER_FIELDS=$(jq -n --arg total "$PROWLER_TOTAL" --argjson sev "$PROWLER_BY_SEV" '{total:$total|tonumber, severity:$sev}')
+
+      # Leer estado de upload si existe (del job manual)
+      UPLOAD_STATUS_TEXT=""
+      if [ -f dd_upload_status.json ]; then
+        UPLOAD_STATUS_TEXT=$(jq -r 'to_entries | map("\(.key): \(.value)") | join(" | ")' dd_upload_status.json 2>/dev/null || echo "")
+      fi
+
+      # Links
+      MR_URL=""
+      if [ -n "$CI_MERGE_REQUEST_IID" ]; then
+        MR_URL="$CI_PROJECT_URL/-/merge_requests/$CI_MERGE_REQUEST_IID"
+      fi
+      DD_URL=""
+      if [ -n "$DEFECTDOJO_URL" ] && [ -n "$DEFECTDOJO_ENGAGEMENT_ID" ]; then
+        DD_URL="$DEFECTDOJO_URL/engagement/$DEFECTDOJO_ENGAGEMENT_ID"
+      fi
+
+      # Optional mention
+      MENTION=""
+      if [ -n "$SLACK_ALERT_TAG" ]; then
+        if [ "$SLACK_ALERT_MODE" = "always" ]; then
+          MENTION="$SLACK_ALERT_TAG "
+        elif [ "$SLACK_ALERT_MODE" = "problems-only" ]; then
+          if [ "$GITLEAKS_TOTAL" -gt 0 ] || [ "$TRUFFLEHOG_TOTAL" -gt 0 ] || [ "$CHECKOV_TOTAL" -gt 0 ]; then
+            MENTION="$SLACK_ALERT_TAG "
+          fi
+        fi
+      fi
+
+      # Build Slack Block Kit payload
+      PAYLOAD=$(jq -n \
+        --arg mention "$MENTION" \
+        --arg status_icon "$STATUS_ICON" \
+        --arg status "$CI_JOB_STATUS" \
+        --arg project "$CI_PROJECT_PATH" \
+        --arg branch "$CI_COMMIT_BRANCH" \
+        --arg sha "$CI_COMMIT_SHORT_SHA" \
+        --arg title "$CI_COMMIT_TITLE" \
+        --arg pipeline_url "$CI_PIPELINE_URL" \
+        --arg mr_url "$MR_URL" \
+        --arg dd_url "$DD_URL" \
+        --arg color "$COLOR" \
+        --arg checkov_total "$CHECKOV_TOTAL" \
+        --arg gitleaks_total "$GITLEAKS_TOTAL" \
+        --arg trufflehog_total "$TRUFFLEHOG_TOTAL" \
+        --arg prowler_total "$PROWLER_TOTAL" \
+        --arg upload_status_text "$UPLOAD_STATUS_TEXT" \
+        --argjson checkov_fields "$CHECKOV_FIELDS" \
+        --argjson prowler_fields "$PROWLER_FIELDS" \
+        '{
+          attachments: [
+            {
+              color: $color,
+              blocks: [
+                { type: "section", text: { type: "mrkdwn", text: "\($mention)*\($status_icon) IaC Pipeline* – \($status)" } },
+                { type: "context", elements: [ { type: "mrkdwn", text: "`\($project)` | branch: `\($branch)` | sha: `\($sha)`" } ] },
+                { type: "section", text: { type: "mrkdwn", text: "*Commit:* \($title)" } },
+                { type: "divider" },
+                { type: "section", fields: [
+                    { type: "mrkdwn", text: "*Checkov Failed:* \n\($checkov_total)" },
+                    { type: "mrkdwn", text: "*Gitleaks:* \n\($gitleaks_total)" },
+                    { type: "mrkdwn", text: "*TruffleHog:* \n\($trufflehog_total)" },
+                    { type: "mrkdwn", text: "*Prowler Findings:* \n\($prowler_total)" }
+                ]},
+                { type: "context", elements: [
+                    { type: "mrkdwn", text: ("Checkov Sev: \( $checkov_fields.severity|tostring )") },
+                    { type: "mrkdwn", text: ("Prowler Sev: \( $prowler_fields.severity|tostring )") }
+                ]},
+                if ($upload_status_text|length) > 0 then { type: "section", text: { type: "mrkdwn", text: ("*DefectDojo Upload:* \($upload_status_text)") } } else empty end,
+                { type: "actions", elements: [
+                  { type: "button", text: { type: "plain_text", text: "Open Pipeline" }, url: $pipeline_url },
+                  if $mr_url != "" then { type: "button", text: { type: "plain_text", text: "Open MR" }, url: $mr_url } else empty end,
+                  if $dd_url != "" then { type: "button", text: { type: "plain_text", text: "DefectDojo" }, url: $dd_url } else empty end
+                ]}
+              ]
+            }
+          ]
+        }')
+
+      echo "$PAYLOAD" | jq '.'
+      curl -s -X POST -H 'Content-type: application/json' \
+        --data "$PAYLOAD" \
+        "$SLACK_WEBHOOK_URL" | sed -n '1,200p'
+  when: manual
+  allow_failure: false
+  rules:
+    - when: manual
+
+
+##################################
+# --- TERRAFORM DESTROY: destruye toda la infraestructura cuando se solicita ---
+##################################
+terraform_destroy:
+  stage: destroy
+  needs: []
+  image:
+    name: hashicorp/terraform:latest
+    entrypoint: ["/bin/sh", "-c"]
+  id_tokens:
+    AWS_OIDC_TOKEN:
+      aud: https://gitlab.com
+  before_script:
+    - apk add --no-cache curl unzip jq aws-cli
+    - echo "🔑 Asumiendo rol OIDC AWS (destroy)"
+    - |
+      aws sts assume-role-with-web-identity \
+        --role-arn arn:aws:iam::419030942547:role/gitlab-eks-lab9-role \
+        --role-session-name gitlab-destroy-session \
+        --web-identity-token "$AWS_OIDC_TOKEN" > creds.json
+    - export AWS_ACCESS_KEY_ID=$(jq -r '.Credentials.AccessKeyId' creds.json)
+    - export AWS_SECRET_ACCESS_KEY=$(jq -r '.Credentials.SecretAccessKey' creds.json)
+    - export AWS_SESSION_TOKEN=$(jq -r '.Credentials.SessionToken' creds.json)
+    - unset AWS_WEB_IDENTITY_TOKEN_FILE AWS_ROLE_ARN AWS_PROFILE
+  script:
+    - terraform init
+    - terraform destroy -auto-approve
+  when: manual
+  allow_failure: false
+  rules:
+    - when: manual
+  dependencies:
+    - checkov_scan
+    - git_secrets
+    - prowler_audit
+    - upload_to_defectdojo
