@@ -40,7 +40,7 @@ ROADMAP DE LABORATORIOS
 |✅|5|OPA Gatekeeper + PSS|Azure AKS|Policy as Code|OPA|
 |✅|6|RBAC + JIT + PAM|Azure AKS|IAM + Just-In-Time|Azure AD|
 |✅|7|Threat Intelligence Automation|Multi-cloud|CTI Ingestion + Sharing|OpenCTI + MISP|
-|🟠|8|DevSecOps IaC Pipeline + Defectdojo example|Multi-cloud|SAST/DAST/SCA|GitLab|
+|✅|8|DevSecOps IaC Pipeline + Defectdojo example|Multi-cloud|SAST/DAST/SCA|GitLab|
 |🟠|9|DevSecOps App Pipeline + Defectdojo example|Multi-cloud|SAST/DAST/SCA|GitLab|
 |🟠|10|Kyverno + Image Scanning|GCP GKE|Policy Engine + Trivy|Kyverno|
 |🟠|11|ArgoCD + GitOps Security|GCP GKE|Secure GitOps|ArgoCD|
