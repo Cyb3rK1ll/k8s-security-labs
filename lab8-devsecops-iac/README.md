@@ -1,4 +1,4 @@
-## 🚀 Lab 9 – IaC + SecOps on AWS/EKS (GitLab OIDC)
+## 🚀 Lab 8 – IaC + SecOps on AWS/EKS (GitLab OIDC)
 
 ---
 **Author**: Claudio Magagnotti  
