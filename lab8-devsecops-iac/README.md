@@ -134,7 +134,6 @@ If this helped, link it in your profile to tell a clear, hands‑on DevSecOps st
 Visual representation of the main AWS/EKS resources (see also `docs/infra-diagram.mmd`).
 
 ### Evidence/Screenshots
-Neutral captions to avoid mismatch. Rename files later for clarity.
 
 - Screenshot 1
   ![Screenshot 1](evidence/screenshots/image.png)
